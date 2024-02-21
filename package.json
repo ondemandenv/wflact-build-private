@@ -1,24 +1,16 @@
 {
-  "name": "typescript-action",
-  "description": "GitHub Actions TypeScript template",
-  "version": "0.0.0",
-  "author": "",
+  "name": "odmd-ecr2eks",
+  "description": "odmd-ecr2eks",
+  "version": "0.0.1",
+  "author": "ONDEMANDENV.dev",
   "private": true,
-  "homepage": "https://github.com/actions/typescript-action",
+  "homepage": "https://github.com/ondemandenv/gha-ecr2eks",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/actions/typescript-action.git"
+    "url": "git+https://github.com/ondemandenv/gha-ecr2eks.git"
   },
   "bugs": {
-    "url": "https://github.com/actions/typescript-action/issues"
-  },
-  "keywords": [
-    "actions",
-    "node",
-    "setup"
-  ],
-  "exports": {
-    ".": "./dist/index.js"
+    "url": "https://github.com/ondemandenv/gha-ecr2eks/issues"
   },
   "engines": {
     "node": ">=20"
