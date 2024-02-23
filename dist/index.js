@@ -20649,16 +20649,14 @@ const process = __importStar(__nccwpck_require__(7282));
 async function run() {
     try {
         core.error(JSON.stringify(process.env));
-        const sts = new client_sts_1.STSClient({});
+        const sts = new client_sts_1.STSClient({ region: process.env.AWS_DEFAULT_REGION });
         const callerId = await sts.send(new client_sts_1.GetCallerIdentityCommand({}));
         core.error('>>>>');
         core.error(JSON.stringify(callerId, null, 2));
         core.error('<<<<');
     }
     catch (error) {
-        // Fail the workflow run if an error occurs
-        if (error instanceof Error)
-            core.setFailed(error.message);
+        core.error(JSON.stringify(error, null, 2));
     }
 }
 exports.run = run;
