@@ -11,7 +11,7 @@ export async function run(): Promise<void> {
   try {
     core.error(JSON.stringify(process.env))
 
-    const sts = new STSClient({})
+    const sts = new STSClient({region: process.env.AWS_DEFAULT_REGION})
     const callerId = await sts.send(new GetCallerIdentityCommand({}))
     core.error('>>>>')
     core.error(JSON.stringify(callerId, null, 2))
