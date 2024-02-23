@@ -1,5 +1,6 @@
 import * as core from '@actions/core'
 import { wait } from './wait'
+import { GetCallerIdentityCommand, STSClient } from '@aws-sdk/client-sts'
 
 /**
  * The main function for the action.
@@ -16,6 +17,12 @@ export async function run(): Promise<void> {
     core.debug(new Date().toTimeString())
     await wait(parseInt(ms, 10))
     core.debug(new Date().toTimeString())
+
+    const sts = new STSClient({})
+    const callerId = await sts.send(new GetCallerIdentityCommand({}))
+    core.error('>>>>')
+    core.error(JSON.stringify(callerId, null, 2))
+    core.error('<<<<')
 
     // Set outputs for other workflow steps to use
     core.setOutput('time', new Date().toTimeString())
