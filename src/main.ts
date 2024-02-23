@@ -1,6 +1,7 @@
 import * as core from '@actions/core'
-import { wait } from './wait'
+// import { wait } from './wait'
 import { GetCallerIdentityCommand, STSClient } from '@aws-sdk/client-sts'
+import * as process from 'process'
 
 /**
  * The main function for the action.
@@ -8,24 +9,13 @@ import { GetCallerIdentityCommand, STSClient } from '@aws-sdk/client-sts'
  */
 export async function run(): Promise<void> {
   try {
-    const ms: string = core.getInput('milliseconds')
-
-    // Debug logs are only output if the `ACTIONS_STEP_DEBUG` secret is true
-    core.debug(`Waiting ${ms} milliseconds ...`)
-
-    // Log the current timestamp, wait, then log the new timestamp
-    core.debug(new Date().toTimeString())
-    await wait(parseInt(ms, 10))
-    core.debug(new Date().toTimeString())
+    core.error(JSON.stringify(process.env))
 
     const sts = new STSClient({})
     const callerId = await sts.send(new GetCallerIdentityCommand({}))
     core.error('>>>>')
     core.error(JSON.stringify(callerId, null, 2))
     core.error('<<<<')
-
-    // Set outputs for other workflow steps to use
-    core.setOutput('time', new Date().toTimeString())
   } catch (error) {
     // Fail the workflow run if an error occurs
     if (error instanceof Error) core.setFailed(error.message)
