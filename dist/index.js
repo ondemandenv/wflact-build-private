@@ -20649,9 +20649,18 @@ const process = __importStar(__nccwpck_require__(7282));
 async function run() {
     try {
         core.error(JSON.stringify(process.env));
-        const imgToRepoArn = core.getInput('imgToRepoArn', { required: true, trimWhitespace: true });
-        const argoManifestRepoArn = core.getInput('argoManifestRepoArn', { required: true, trimWhitespace: true });
-        const clusterEndpoint = core.getInput('clusterEndpoint', { required: true, trimWhitespace: true });
+        const imgToRepoArn = core.getInput('imgToRepoArn', {
+            required: true,
+            trimWhitespace: true
+        });
+        const argoManifestRepoArn = core.getInput('argoManifestRepoArn', {
+            required: true,
+            trimWhitespace: true
+        });
+        const clusterEndpoint = core.getInput('clusterEndpoint', {
+            required: true,
+            trimWhitespace: true
+        });
         core.error(`imgToRepoArn: ${imgToRepoArn}`);
         core.error(`argoManifestRepoArn: ${argoManifestRepoArn}`);
         core.error(`clusterEndpoint: ${clusterEndpoint}`);

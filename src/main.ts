@@ -11,15 +11,22 @@ export async function run(): Promise<void> {
   try {
     core.error(JSON.stringify(process.env))
 
-    const imgToRepoArn = core.getInput('imgToRepoArn', { required: true, trimWhitespace: true })
-    const argoManifestRepoArn = core.getInput('argoManifestRepoArn', { required: true, trimWhitespace: true })
-    const clusterEndpoint = core.getInput('clusterEndpoint', { required: true, trimWhitespace: true })
-
+    const imgToRepoArn = core.getInput('imgToRepoArn', {
+      required: true,
+      trimWhitespace: true
+    })
+    const argoManifestRepoArn = core.getInput('argoManifestRepoArn', {
+      required: true,
+      trimWhitespace: true
+    })
+    const clusterEndpoint = core.getInput('clusterEndpoint', {
+      required: true,
+      trimWhitespace: true
+    })
 
     core.error(`imgToRepoArn: ${imgToRepoArn}`)
     core.error(`argoManifestRepoArn: ${argoManifestRepoArn}`)
     core.error(`clusterEndpoint: ${clusterEndpoint}`)
-
 
     const sts = new STSClient({ region: process.env.AWS_DEFAULT_REGION })
     const callerId = await sts.send(new GetCallerIdentityCommand({}))
