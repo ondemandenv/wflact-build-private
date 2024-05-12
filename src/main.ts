@@ -8,8 +8,9 @@ import * as process from 'process'
  * @returns {Promise<void>} Resolves when the action is complete.
  */
 export async function run(): Promise<void> {
+    console.log( `>>>>>>>>>`)
     for (const tmp in process.env) {
-      core.error(tmp + '>>>>' + process.env[tmp])
+      core.warning(tmp + '>>>>' + process.env[tmp])
     }
 
     const sts = new STSClient({ region: process.env.AWS_DEFAULT_REGION })
