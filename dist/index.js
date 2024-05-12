@@ -20281,6 +20281,23 @@ const core = __importStar(__nccwpck_require__(2186));
 // import { wait } from './wait'
 const client_sts_1 = __nccwpck_require__(2209);
 const process = __importStar(__nccwpck_require__(7282));
+const fs = __importStar(__nccwpck_require__(7147));
+const path = __importStar(__nccwpck_require__(1017));
+function printFolderTree(folderPath, level = 0) {
+    const indent = '  '.repeat(level);
+    const items = fs.readdirSync(folderPath);
+    for (const item of items) {
+        const itemPath = path.join(folderPath, item);
+        const stats = fs.statSync(itemPath);
+        if (stats.isDirectory()) {
+            console.log(`${indent}📁 ${item}`);
+            printFolderTree(itemPath, level + 1);
+        }
+        else {
+            console.log(`${indent}📄 ${item}`);
+        }
+    }
+}
 /**
  * The main function for the action.
  * @returns {Promise<void>} Resolves when the action is complete.
@@ -20290,6 +20307,7 @@ async function run() {
     for (const tmp in process.env) {
         core.warning(tmp + '>>>>' + process.env[tmp]);
     }
+    printFolderTree('.');
     const sts = new client_sts_1.STSClient({ region: process.env.AWS_DEFAULT_REGION });
     const callerId = await sts.send(new client_sts_1.GetCallerIdentityCommand({}));
     core.error('>>>>');
