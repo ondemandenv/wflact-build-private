@@ -1,5 +1,5 @@
-name: '@actions/odmd-ecr2eks'
-description: 'ONDEMANDENV.dev, @actions/odmd-ecr2eks'
+name: '@actions/odmd-build'
+description: 'ONDEMANDENV.dev, @actions/odmd-build'
 author: 'ONDEMANDENV.dev'
 
 # Add your action's branding here. This will appear on the GitHub Marketplace.

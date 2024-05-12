@@ -1,6 +1,6 @@
 {
-  "name": "odmd-ecr2eks",
-  "description": "odmd-ecr2eks",
+  "name": "odmd-build",
+  "description": "odmd-build",
   "version": "0.0.1",
   "author": "ONDEMANDENV.dev",
   "private": true,
