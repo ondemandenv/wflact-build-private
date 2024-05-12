@@ -20286,32 +20286,15 @@ const process = __importStar(__nccwpck_require__(7282));
  * @returns {Promise<void>} Resolves when the action is complete.
  */
 async function run() {
-    try {
-        core.error(JSON.stringify(process.env));
-        const imgToRepoArn = core.getInput('imgToRepoArn', {
-            required: true,
-            trimWhitespace: true
-        });
-        const argoManifestRepoArn = core.getInput('argoManifestRepoArn', {
-            required: true,
-            trimWhitespace: true
-        });
-        const clusterEndpoint = core.getInput('clusterEndpoint', {
-            required: true,
-            trimWhitespace: true
-        });
-        core.error(`imgToRepoArn: ${imgToRepoArn}`);
-        core.error(`argoManifestRepoArn: ${argoManifestRepoArn}`);
-        core.error(`clusterEndpoint: ${clusterEndpoint}`);
-        const sts = new client_sts_1.STSClient({ region: process.env.AWS_DEFAULT_REGION });
-        const callerId = await sts.send(new client_sts_1.GetCallerIdentityCommand({}));
-        core.error('>>>>');
-        core.error(JSON.stringify(callerId, null, 2));
-        core.error('<<<<');
+    console.log(`>>>>>>>>>`);
+    for (const tmp in process.env) {
+        core.warning(tmp + '>>>>' + process.env[tmp]);
     }
-    catch (error) {
-        core.error(JSON.stringify(error, null, 2));
-    }
+    const sts = new client_sts_1.STSClient({ region: process.env.AWS_DEFAULT_REGION });
+    const callerId = await sts.send(new client_sts_1.GetCallerIdentityCommand({}));
+    core.error('>>>>');
+    core.error(JSON.stringify(callerId, null, 2));
+    core.error('<<<<');
 }
 exports.run = run;
 
