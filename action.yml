@@ -3,8 +3,6 @@ description: 'ONDEMANDENV.dev, @actions/odmd-build'
 author: 'ONDEMANDENV.dev'
 
 inputs:
-  target-rev-ref:
-    description: 'Tag or revision/SHA to checkout, branch will be used if omitted'
   aws-credentials:
     description: | 
       Your AWS credentials in the format:
