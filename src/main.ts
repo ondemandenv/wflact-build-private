@@ -1,23 +1,23 @@
-import * as core from '@actions/core'
+import * as core from "@actions/core";
 // import { wait } from './wait'
-import { GetCallerIdentityCommand, STSClient } from '@aws-sdk/client-sts'
-import * as process from 'process'
-import * as fs from 'fs'
-import * as path from 'path'
+import { GetCallerIdentityCommand, STSClient } from "@aws-sdk/client-sts";
+import * as process from "process";
+import * as fs from "fs";
+import * as path from "path";
 
 function printFolderTree(folderPath: string, level: number = 0) {
-  const indent = '  '.repeat(level)
-  const items = fs.readdirSync(folderPath)
+  const indent = "  ".repeat(level);
+  const items = fs.readdirSync(folderPath);
 
   for (const item of items) {
-    const itemPath = path.join(folderPath, item)
-    const stats = fs.statSync(itemPath)
+    const itemPath = path.join(folderPath, item);
+    const stats = fs.statSync(itemPath);
 
     if (stats.isDirectory()) {
-      console.log(`${indent}📁 ${item}`)
-      printFolderTree(itemPath, level + 1)
+      console.log(`${indent}📁 ${item}`);
+      printFolderTree(itemPath, level + 1);
     } else {
-      console.log(`${indent}📄 ${item}`)
+      console.log(`${indent}📄 ${item}`);
     }
   }
 }
@@ -27,17 +27,17 @@ function printFolderTree(folderPath: string, level: number = 0) {
  * @returns {Promise<void>} Resolves when the action is complete.
  */
 export async function run(): Promise<void> {
-  console.log(`>>>>>>>>>`)
+  console.log(`>>>>>>>>>`);
   for (const tmp in process.env) {
-    core.warning(tmp + '>>>>' + process.env[tmp])
+    core.warning(tmp + ">>>>" + process.env[tmp]);
   }
 
-  printFolderTree('.')
+  printFolderTree(".");
 
-  const sts = new STSClient({ region: process.env.AWS_DEFAULT_REGION })
-  const callerId = await sts.send(new GetCallerIdentityCommand({}))
+  const sts = new STSClient({ region: process.env.AWS_DEFAULT_REGION });
+  const callerId = await sts.send(new GetCallerIdentityCommand({}));
 
-  core.error('>>>>')
-  core.error(JSON.stringify(callerId, null, 2))
-  core.error('<<<<')
+  core.error(">>>>");
+  core.error(JSON.stringify(callerId, null, 2));
+  core.error("<<<<");
 }

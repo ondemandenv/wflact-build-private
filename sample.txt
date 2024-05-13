@@ -1,0 +1,402 @@
+Warning: Unexpected input(s) 'cdk_version', 'cdk_version1', 'cdk_version3', 'cdk_version_akjjj', valid inputs are ['milliseconds']
+Run ondemandenv/build@main
+  with:
+    cdk_version: 1979
+    cdk_version1: 1979888
+    cdk_version3: 1979888k
+    cdk_version_akjjj: layala
+    milliseconds: 1000
+  env:
+    AWS_ACCESS_KEY_ID: ***
+    AWS_SECRET_ACCESS_KEY: ***
+    AWS_SESSION_TOKEN: ***
+    AWS_DEFAULT_REGION: us-west-1
+    ODMD_SRC_ROLE: arn:aws:iam::975050243618:role/odmd-contracts-cdk/odmd-contracts-cdk-us-west-1975050243618-odmd-build-role
+    ODMD_ACCOUNTS: eyJjZW50cmFsIjoiNTkwMTg0MDMxNzk1IiwibmV0d29ya2luZyI6IjU5MDE4MzkwNzQyNCIsIndvcmtwbGFjZTEiOiI5NzUwNTAyNDM2MTgiLCJhaW9yenNieCI6IjQyMDg4NzQxODM3NiJ9
+    SRC_BRANCH: odmdSbxUsw1
+    NODE_OPTIONS: --unhandled-rejections=strict
+>>>>>>>>>
+Warning: LANG>>>>C.UTF-8
+Warning: JAVA_HOME>>>>/usr/lib/jvm/temurin-11-jdk-amd64
+Warning: STATS_UE>>>>true
+Warning: DEPLOYMENT_BASEPATH>>>>/opt/runner
+Warning: USER>>>>runner
+Warning: JAVA_HOME_21_X64>>>>/usr/lib/jvm/temurin-21-jdk-amd64
+Warning: CONDA>>>>/usr/share/miniconda
+Warning: STATS_TRP>>>>true
+Warning: ANT_HOME>>>>/usr/share/ant
+Warning: SYSTEMD_EXEC_PID>>>>470
+Warning: JAVA_HOME_11_X64>>>>/usr/lib/jvm/temurin-11-jdk-amd64
+Warning: STATS_EXTP>>>>https://provjobdsettingscdn.blob.core.windows.net/settings/provjobdsettings-0.5.172+1/provjobd.data
+Warning: ANDROID_NDK_HOME>>>>/usr/local/lib/android/sdk/ndk/25.2.9519653
+Warning: GITHUB_ACTIONS>>>>true
+Warning: CI>>>>true
+Warning: XDG_RUNTIME_DIR>>>>/run/user/1001
+Warning: RUNNER_USER>>>>runner
+Warning: JOURNAL_STREAM>>>>8:18795
+Warning: SELENIUM_JAR_PATH>>>>/usr/share/java/selenium-server.jar
+Warning: POWERSHELL_DISTRIBUTION_CHANNEL>>>>GitHub-Actions-ubuntu22
+Warning: GRADLE_HOME>>>>/usr/share/gradle-8.7
+Warning: PIPX_HOME>>>>/opt/pipx
+Warning: STATS_D_D>>>>true
+Warning: BOOTSTRAP_HASKELL_NONINTERACTIVE>>>>1
+Warning: ImageVersion>>>>20240422.1.0
+Warning: ANDROID_SDK_ROOT>>>>/usr/local/lib/android/sdk
+Warning: ACCEPT_EULA>>>>Y
+Warning: HOMEBREW_CLEANUP_PERIODIC_FULL_DAYS>>>>3650
+Warning: RUNNER_PERFLOG>>>>/home/runner/perflog
+Warning: INVOCATION_ID>>>>8adf67f7d06f4836ae934a41cafc9d2d
+Warning: CHROME_BIN>>>>/usr/bin/google-chrome
+Warning: GECKOWEBDRIVER>>>>/usr/local/share/gecko_driver
+Warning: LEIN_JAR>>>>/usr/local/lib/lein/self-installs/leiningen-2.11.2-standalone.jar
+Warning: JAVA_HOME_17_X64>>>>/usr/lib/jvm/temurin-17-jdk-amd64
+Warning: DOTNET_SKIP_FIRST_TIME_EXPERIENCE>>>>1
+Warning: CHROMEWEBDRIVER>>>>/usr/local/share/chromedriver-linux64
+Warning: HOME>>>>/home/runner
+Warning: NVM_DIR>>>>/home/runner/.nvm
+Warning: PATH>>>>/snap/bin:/home/runner/.local/bin:/opt/pipx_bin:/home/runner/.cargo/bin:/home/runner/.config/composer/vendor/bin:/usr/local/.ghcup/bin:/home/runner/.dotnet/tools:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin
+Warning: PIPX_BIN_DIR>>>>/opt/pipx_bin
+Warning: STATS_V3PS>>>>true
+Warning: VCPKG_INSTALLATION_ROOT>>>>/usr/local/share/vcpkg
+Warning: STATS_VMD>>>>true
+Warning: ANDROID_HOME>>>>/usr/local/lib/android/sdk
+Warning: ACTIONS_RUNNER_ACTION_ARCHIVE_CACHE>>>>/opt/actionarchivecache
+Warning: DOTNET_MULTILEVEL_LOOKUP>>>>0
+Warning: HOMEBREW_NO_AUTO_UPDATE>>>>1
+Warning: DOTNET_NOLOGO>>>>1
+Warning: JAVA_HOME_8_X64>>>>/usr/lib/jvm/temurin-8-jdk-amd64
+Warning: RUNNER_TOOL_CACHE>>>>/opt/hostedtoolcache
+Warning: LEIN_HOME>>>>/usr/local/lib/lein
+Warning: AGENT_TOOLSDIRECTORY>>>>/opt/hostedtoolcache
+Warning: STATS_D>>>>true
+Warning: ANDROID_NDK_ROOT>>>>/usr/local/lib/android/sdk/ndk/25.2.9519653
+Warning: ImageOS>>>>ubuntu22
+Warning: XDG_CONFIG_HOME>>>>/home/runner/.config
+Warning: SGX_AESM_ADDR>>>>1
+Warning: STATS_VMFE>>>>true
+Warning: GOROOT_1_22_X64>>>>/opt/hostedtoolcache/go/1.22.2/x64
+Warning: PERFLOG_LOCATION_SETTING>>>>RUNNER_PERFLOG
+Warning: GHCUP_INSTALL_BASE_PREFIX>>>>/usr/local
+Warning: AZURE_EXTENSION_DIR>>>>/opt/az/azcliextensions
+Warning: GOROOT_1_20_X64>>>>/opt/hostedtoolcache/go/1.20.14/x64
+Warning: ANDROID_NDK_LATEST_HOME>>>>/usr/local/lib/android/sdk/ndk/26.3.11579264
+Warning: STATS_RDCL>>>>true
+Warning: RUNNER_TRACKING_ID>>>>github_14c6568b-2e92-4924-8536-0bb3ba30bfe7
+Warning: GOROOT_1_21_X64>>>>/opt/hostedtoolcache/go/1.21.9/x64
+Warning: ANDROID_NDK>>>>/usr/local/lib/android/sdk/ndk/25.2.9519653
+Warning: SWIFT_PATH>>>>/usr/share/swift/usr/bin
+Warning: DEBIAN_FRONTEND>>>>noninteractive
+Warning: STATS_EXT>>>>true
+Warning: EDGEWEBDRIVER>>>>/usr/local/share/edge_driver
+Warning: AWS_ACCESS_KEY_ID>>>>***
+Warning: AWS_SECRET_ACCESS_KEY>>>>***
+Warning: AWS_SESSION_TOKEN>>>>***
+Warning: AWS_DEFAULT_REGION>>>>us-west-1
+Warning: ODMD_SRC_ROLE>>>>arn:aws:iam::975050243618:role/odmd-contracts-cdk/odmd-contracts-cdk-us-west-1975050243618-odmd-build-role
+Warning: ODMD_ACCOUNTS>>>>eyJjZW50cmFsIjoiNTkwMTg0MDMxNzk1IiwibmV0d29ya2luZyI6IjU5MDE4MzkwNzQyNCIsIndvcmtwbGFjZTEiOiI5NzUwNTAyNDM2MTgiLCJhaW9yenNieCI6IjQyMDg4NzQxODM3NiJ9
+Warning: SRC_BRANCH>>>>odmdSbxUsw1
+Warning: NODE_OPTIONS>>>>--unhandled-rejections=strict
+Warning: INPUT_CDK_VERSION>>>>1979
+Warning: INPUT_CDK_VERSION1>>>>1979888
+Warning: INPUT_CDK_VERSION3>>>>1979888k
+Warning: INPUT_CDK_VERSION_AKJJJ>>>>layala
+Warning: INPUT_MILLISECONDS>>>>1000
+Warning: GITHUB_JOB>>>>cdk-deploy
+Warning: GITHUB_REF>>>>refs/heads/odmdSbxUsw1
+Warning: GITHUB_SHA>>>>33f95c131ccfa769070b35b3defd72e540ce5db4
+Warning: GITHUB_REPOSITORY>>>>ondemandenv/odmd-app-contracts
+Warning: GITHUB_REPOSITORY_OWNER>>>>ondemandenv
+Warning: GITHUB_REPOSITORY_OWNER_ID>>>>126026684
+Warning: GITHUB_RUN_ID>>>>9063751659
+Warning: GITHUB_RUN_NUMBER>>>>60
+Warning: GITHUB_RETENTION_DAYS>>>>90
+Warning: GITHUB_RUN_ATTEMPT>>>>1
+Warning: GITHUB_REPOSITORY_ID>>>>612669666
+Warning: GITHUB_ACTOR_ID>>>>31018304
+Warning: GITHUB_ACTOR>>>>garyy7811
+Warning: GITHUB_TRIGGERING_ACTOR>>>>garyy7811
+Warning: GITHUB_WORKFLOW>>>>tmp-tst
+Warning: GITHUB_HEAD_REF>>>>
+Warning: GITHUB_BASE_REF>>>>
+Warning: GITHUB_EVENT_NAME>>>>workflow_dispatch
+Warning: GITHUB_SERVER_URL>>>>https://github.com
+Warning: GITHUB_API_URL>>>>https://api.github.com
+Warning: GITHUB_GRAPHQL_URL>>>>https://api.github.com/graphql
+Warning: GITHUB_REF_NAME>>>>odmdSbxUsw1
+Warning: GITHUB_REF_PROTECTED>>>>false
+Warning: GITHUB_REF_TYPE>>>>branch
+Warning: GITHUB_WORKFLOW_REF>>>>ondemandenv/odmd-app-contracts/.github/workflows/tmp.yaml@refs/heads/odmdSbxUsw1
+Warning: GITHUB_WORKFLOW_SHA>>>>33f95c131ccfa769070b35b3defd72e540ce5db4
+Warning: GITHUB_WORKSPACE>>>>/home/runner/work/odmd-app-contracts/odmd-app-contracts
+Warning: GITHUB_ACTION>>>>__ondemandenv_build
+Warning: GITHUB_EVENT_PATH>>>>/home/runner/work/_temp/_github_workflow/event.json
+Warning: GITHUB_ACTION_REPOSITORY>>>>ondemandenv/build
+Warning: GITHUB_ACTION_REF>>>>main
+Warning: GITHUB_PATH>>>>/home/runner/work/_temp/_runner_file_commands/add_path_6b942560-a420-4502-a76b-59381f87533c
+Warning: GITHUB_ENV>>>>/home/runner/work/_temp/_runner_file_commands/set_env_6b942560-a420-4502-a76b-59381f87533c
+Warning: GITHUB_STEP_SUMMARY>>>>/home/runner/work/_temp/_runner_file_commands/step_summary_6b942560-a420-4502-a76b-59381f87533c
+Warning: GITHUB_STATE>>>>/home/runner/work/_temp/_runner_file_commands/save_state_6b942560-a420-4502-a76b-59381f87533c
+Warning: GITHUB_OUTPUT>>>>/home/runner/work/_temp/_runner_file_commands/set_output_6b942560-a420-4502-a76b-59381f87533c
+Warning: RUNNER_OS>>>>Linux
+Warning: RUNNER_ARCH>>>>X64
+Warning: RUNNER_NAME>>>>GitHub Actions 20
+Warning: RUNNER_ENVIRONMENT>>>>github-hosted
+Warning: RUNNER_TEMP>>>>/home/runner/work/_temp
+Warning: RUNNER_WORKSPACE>>>>/home/runner/work/odmd-app-contracts
+Warning: ACTIONS_RUNTIME_URL>>>>https://pipelinesghubeus25.actions.githubusercontent.com/XSpG6phZdiprg5CNZvpNSjDCmIlzgDXOmdCfznl2bQ57uCq2sV/
+Warning: ACTIONS_RUNTIME_TOKEN>>>>***
+Warning: ACTIONS_CACHE_URL>>>>https://acghubeus2.actions.githubusercontent.com/XSpG6phZdiprg5CNZvpNSjDCmIlzgDXOmdCfznl2bQ57uCq2sV/
+Warning: ACTIONS_RESULTS_URL>>>>https://results-receiver.actions.githubusercontent.com/
+📁 .git
+  📄 FETCH_HEAD
+  📄 HEAD
+  📁 branches
+  📄 config
+  📄 description
+  📁 hooks
+    📄 applypatch-msg.sample
+    📄 commit-msg.sample
+    📄 fsmonitor-watchman.sample
+    📄 post-update.sample
+    📄 pre-applypatch.sample
+    📄 pre-commit.sample
+    📄 pre-merge-commit.sample
+    📄 pre-push.sample
+    📄 pre-rebase.sample
+    📄 pre-receive.sample
+    📄 prepare-commit-msg.sample
+    📄 push-to-checkout.sample
+    📄 sendemail-validate.sample
+    📄 update.sample
+  📄 index
+  📁 info
+    📄 exclude
+  📁 logs
+    📄 HEAD
+    📁 refs
+      📁 heads
+        📄 odmdSbxUsw1
+      📁 remotes
+        📁 origin
+          📄 odmdSbxUsw1
+  📁 objects
+    📁 00
+      📄 4687c360f1ce011a4eabad61bd253df3f3c00e
+    📁 03
+      📄 7b40b4faf737e31687fd215e51f528270a4d23
+    📁 09
+      📄 67ef424bce6791893e9a57bb952f80fd536e93
+      📄 8ff8ae2f87bbae21e39f9c822066b3b2b50d27
+    📁 0a
+      📄 b946e992299a04e341d219ab6e49f5a02f1a29
+    📁 0c
+      📄 fed943142bdc451ff8b4746291e24efa75ee69
+    📁 23
+      📄 08b198085a44dafa0e6e0c9df4a9d455c6e725
+    📁 26
+      📄 3c1d7262209c30c3a4bccc62a8ecf333c31adf
+    📁 28
+      📄 38821fe8bf546b5b39825aaad983be2d01cae4
+    📁 29
+      📄 9ff882ffcb7c0e84328fa51ebadce2f009c61d
+    📁 2a
+      📄 7b007c6ec9716d8a7819ab5b00f9d6c3076e3f
+      📄 e76aac9908a37b72c0127f04881d272881dcc1
+    📁 30
+      📄 3bc27c604d4da3fb91effd81039fc44b7386f1
+    📁 31
+      📄 4b7ca8b58a2975fbd5cc7e2ec35a898984f103
+    📁 33
+      📄 f95c131ccfa769070b35b3defd72e540ce5db4
+    📁 35
+      📄 30f2e7339ab0f6a1cbfaa7db596b6d3ed034c5
+    📁 36
+      📄 dbd037c22fe5386d107c54797cbfe0effbeee5
+    📁 37
+      📄 438c317ccb2855cbd37ae648049d07cebdf598
+    📁 39
+      📄 75d6f9b446d4bfbeb302d2054d12cbf880deb5
+    📁 3b
+      📄 e5b38341daf5ab4fbfbb3ee034412a1f446889
+      📄 eb4c7fb29315559d4cf74473325a48779247f1
+    📁 43
+      📄 57f01ab1a4c8ddeaae320e2e6ed210861489ca
+    📁 45
+      📄 876f3d336acc1db78d25afa6d00c3681d624ca
+    📁 48
+      📄 3cd00099929bfaf8ff292da41395a73831a9cf
+    📁 4d
+      📄 f8d07ceafaafc512ff381057ae1bc4341715b3
+    📁 58
+      📄 32378f5d1f6ac6b40d2284c295c263bc1d8ee6
+    📁 5a
+      📄 4ff205dbe790b6eb3e6e9c0afa227eb887e676
+    📁 62
+      📄 051bf910056c343053870394b7c33c4b6cdec6
+    📁 63
+      📄 368a1fabf9db10770d24ebe4702903893349f3
+    📁 67
+      📄 4f85b6e4103d21b34d581a966df1a358855078
+    📁 6b
+      📄 cde6b8a324fb2eea4e0e05064f9d8f0053a46d
+    📁 6f
+      📄 e9c0587495be7def37a4632f432f9ff53e6d9a
+    📁 7d
+      📄 c66847048bbabed29a262a4e7c2e77f428cdb4
+    📁 86
+      📄 b3d27fb137e5b3f93c9b0ce1d090827bd7e633
+    📁 8a
+      📄 0955daaf3a2a21b34104402b36503677ce5f46
+    📁 8c
+      📄 7d95e736e25bc898925cde45edf47c4805b6c8
+    📁 8d
+      📄 b7bdb26a86025dd201591faf20a2b93a15e132
+      📄 de2063247793bf25d840520ba385b40692bb9e
+    📁 8f
+      📄 64954f3182fe4f7d67a096de0ae8de036e841d
+    📁 90
+      📄 3c2d9c262f1356d07a19af8a81383edb9a3318
+    📁 9e
+      📄 7463ebad3f22c677d7eb949daad590f26f124f
+    📁 a0
+      📄 c0e704fcc4fbb611aa35d82be5f3261e8b75ad
+    📁 a2
+      📄 79b5c45bf137735a1fc3cc4e3dd21ecb415034
+    📁 a4
+      📄 7976bcabbe1212c299b515740753382dec79ba
+      📄 990f12d2f31c2f313832fad309b972607f89c3
+    📁 aa
+      📄 8e524e35616a408facc13dfd1e6663f0f18fce
+      📄 a7dc510f1d2a4e3478c37ea1bee78d20aaf7f5
+    📁 ac
+      📄 73bb8d50b32b6820da72ef2c068ed05ed078c9
+    📁 b0
+      📄 ec7c6c7c4f99c2f80985e6f2686c82c6480207
+    📁 b1
+      📄 650bb715d0f9d7250901055b30a9fe5dedfc99
+    📁 b2
+      📄 084f3aedf03a7e86f4fb2166289a5f1dbb5391
+    📁 ba
+      📄 bd90c626b38fc56e5494db8d8e446686a1bb4b
+    📁 bf
+      📄 9e29d457f1eb9107bcb924db9bc7544ae88586
+    📁 c3
+      📄 24bc04af1ff2b687edc086e5c1eecf7ee0d6ab
+    📁 c5
+      📄 7cec5b342a5998904715aa1c9f5a1fe6ac764d
+    📁 ca
+      📄 ff427f910b2296bb9f8f6fbd14e32a6f31e5d9
+    📁 cd
+      📄 6680a273f25d8708d2c975b4b949175d95e6d7
+    📁 cf
+      📄 ed21ef6dce0b76544bf0200750687970c6f8e2
+    📁 e1
+      📄 fb81598407b1475e9d01e7af38aa4be86e1882
+    📁 e2
+      📄 f18267063daf362ffdaacf0964aea707bfe6c3
+    📁 e7
+      📄 0b5e69fbd3c79b30d8282bcb343668f4dd6589
+      📄 62ce9382aa34a601ea8c29dc2735f061d8f35b
+    📁 eb
+      📄 2d515f7c7cdb51c8c318e982def09159201ef6
+      📄 7f752042cc44b5bfe1f7b6579dce5ecb6200e7
+    📁 ed
+      📄 98ff1017b96038e7e4ed01dd64ac781fa611f1
+    📁 f0
+      📄 16e38b0f5a6b9b2c2b48ba6d40693643a227dc
+    📁 f3
+      📄 b3c50222df700ac082d7fb950865831b1858c2
+    📁 fc
+      📄 7fc4872f2739d6d02cfcdac7b42e1b779242d0
+    📁 fd
+      📄 8815453513729f56c44f3e30f2322b5ae97dbd
+    📁 info
+    📁 pack
+  📁 refs
+    📁 heads
+      📄 odmdSbxUsw1
+    📁 remotes
+      📁 origin
+        📄 odmdSbxUsw1
+    📁 tags
+  📄 shallow
+📁 .github
+  📁 workflows
+    📄 ODMD_odmd-contracts-cdk-CdkGithubWF.yaml
+    📄 ODMD_odmd-contracts-npm-NpmPackGH-RepoBuildNpmPackWithGithubWorkflowgithubWFlodmdSbxUsw184FC947A.yaml
+    📄 tmp.yaml
+📄 .gitignore
+📄 .npmignore
+📄 README.md
+📄 cdk.context.json
+📄 cdk.json
+📄 cdk8s.yaml
+📁 imports
+  📄 argocd-argoproj.io.ts
+  📄 remove-readonly.ts
+📄 index.ts
+📄 jest.config.js
+📁 lib
+  📄 OndemandContracts.ts
+  📁 odmd-model
+    📄 contracts-build.ts
+    📄 contracts-cross-refs.ts
+    📄 contracts-eks-manifest.ts
+    📄 contracts-enver-cdk.ts
+    📄 contracts-enver-collection.ts
+    📄 contracts-enver-containerImg.ts
+    📄 contracts-enver-ecr-to-eks-argo.ts
+    📄 contracts-enver-eks-cluster.ts
+    📄 contracts-enver-npm.ts
+    📄 contracts-enver.ts
+    📄 contracts-pg-schema-usrs.ts
+    📄 contracts-rds-cluster.ts
+    📄 contracts-share-values.ts
+    📄 contracts-vpc.ts
+  📄 ondemand-contracts-visual.ts
+  📁 repos
+    📁 __contracts
+      📄 odmd-build-odmd-contracts.ts
+      📄 odmd-enver-contracts-cdk.ts
+      📄 odmd-enver-contracts-npm.ts
+    📁 __eks
+      📄 odmd-build-eks-cluster-kubeSG.ts
+      📄 odmd-build-eks-cluster.ts
+      📄 odmd-build-eks.ts
+    📁 __networking
+      📄 odmd-config-networking.ts
+    📁 _default-ecr-eks
+      📄 odmd-build-default-ecr-eks.ts
+      📄 odmd-enver-default-ecr-eks.ts
+    📁 _default-vpc-rds
+      📄 odmd-build-default-vpc-rds.ts
+      📄 odmd-enver-default-vpc-rds.ts
+    📁 sample
+      📁 cdk
+        📄 odmd-build-sample-spring-cdk.ts
+        📄 odmd-enver-sample-spring-cdk-ecs.ts
+        📄 odmd-enver-sample-spring-cdk-kube-eks.ts
+      📁 spring-img
+        📄 odmd-build-sample-spring-img.ts
+        📄 odmd-enver-sample-spring-img.ts
+📄 package-lock.json
+📄 package.json
+📄 prePushHook.ts
+📁 test
+  📄 tmp.test.ts
+  📄 tmp1.test.ts
+  📄 tmp2.test.ts
+📄 tsconfig.json
+Error: >>>>
+Error: {
+  "$metadata": {
+    "httpStatusCode": 200,
+    "requestId": "da304e15-dd77-4c4e-8be6-f0cff5e2d8ab",
+    "attempts": 1,
+    "totalRetryDelay": 0
+  },
+  "UserId": "AROA6GBMF7YRHTS4OEPZY:a362278e-2eea-4009-b383-e78defbc01cb@--------------------------",
+  "Account": "975050243618",
+  "Arn": "arn:aws:sts::975050243618:assumed-role/odmd-contracts-npm-us-west-1975050243618-odmd-build-role/a362278e-2eea-4009-b383-e78defbc01cb@--------------------------"
+}
+Error: <<<<
