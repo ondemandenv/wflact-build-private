@@ -3,7 +3,7 @@ description: 'ONDEMANDENV.dev, @actions/odmd-build'
 author: 'ONDEMANDENV.dev'
 
 inputs:
-  aws-credentials:
+  aws_credentials:
     description: | 
       Your AWS credentials in the format:
       [0123456789_MyRole_profile]
