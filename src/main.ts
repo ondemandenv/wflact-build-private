@@ -40,4 +40,6 @@ export async function run(): Promise<void> {
   core.error(">>>>");
   core.error(JSON.stringify(callerId, null, 2));
   core.error("<<<<");
+
+  return Promise.resolve();
 }
