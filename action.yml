@@ -12,4 +12,4 @@ inputs:
       aws_session_token=IQo123asdfwf0092foOP(9j*&96G
 runs:
   using: node20
-  main: dist/index.js
+  main: dist/main.js
