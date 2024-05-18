@@ -1,30 +1,21 @@
-import { exec } from "child_process";
-import { BuildConst } from "../build-const";
+import {BuildConst} from "../build-const";
+import {SpawnCmd} from "./SpawnCmd";
 
 export class BuildBase {
-  exeCmd(cmd: string): Promise<string> {
-    console.log(`******>>>exeCmd:
-    ${cmd}
------`);
-    return new Promise((resolve, reject) => {
-      exec(cmd, (error: any, stdout: string, stderr: string) => {
-        if (error) {
-          console.error(error);
-          reject(error);
-        }
-        console.error(stdout || stderr);
-
-        resolve(stdout || stderr);
-        console.log(`******<<<exeCmd`);
-      });
-    });
-  }
-
-  async run() {
-    if (BuildConst.inst.workDirs.length > 1) {
-      await this.exeCmd(`cd ${BuildConst.inst.workDirs}`);
+    async exeCmd(cmd: string, args: string[] = []) {
+        console.log(`***odmd>>>exeCmd:${cmd}`);
+        const sc = new SpawnCmd(cmd, args)
+        let r = await sc.execute();
+        console.log(`***odmd<<<exeCmd:${cmd}`);
+        return r
     }
-    await this.exeCmd(`pwd`);
-    await this.exeCmd(`ls -ltarh`);
-  }
+
+    async run() {
+        if (BuildConst.inst.workDirs.length > 1) {
+            await this.exeCmd(`cd ${BuildConst.inst.workDirs}`);
+        }
+        await this.exeCmd(`pwd`);
+        await this.exeCmd(`ls`, ['-ltarh']);
+        await this.exeCmd(`aws`, ['sts', 'get-caller-identity']);
+    }
 }
