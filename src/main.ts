@@ -6,21 +6,11 @@ import {
 } from "@aws-sdk/client-sts";
 import * as process from "process";
 import { AwsCredentialIdentity } from "@smithy/types";
-import {
-  GetParameterCommand,
-  GetParametersByPathCommand,
-  SSMClient,
-} from "@aws-sdk/client-ssm";
+import { GetParameterCommand, SSMClient } from "@aws-sdk/client-ssm";
 import { BuildCimg } from "./lib/build-cimg";
 import { BuildCdk } from "./lib/build-cdk";
 import { BuildNpm } from "./lib/build-npm";
-
-export const ODMD_buildId = process.env["ODMD_buildId"]!;
-export const ODMD_workDirs = process.env["ODMD_workDirs"]!;
-export const ODMD_buildType = process.env["ODMD_buildType"]!;
-export const ODMD_awsRegion = process.env["ODMD_awsRegion"]!;
-export const ODMD_targetRevRef = process.env.GITHUB_REF_NAME!;
-export const ODMD_workflowName = process.env.GITHUB_WORKFLOW!;
+import { BuildConst } from "./build-const";
 
 /**
  * The main function for the action.
@@ -64,7 +54,7 @@ ${input_creds_str}
   }
 
   const awsSdkConfig = {
-    region: ODMD_awsRegion,
+    region: process.env["ODMD_awsRegion"]!,
     credentials: awsCreds,
   };
   const sts = new STSClient(awsSdkConfig);
@@ -74,17 +64,25 @@ ${input_creds_str}
   core.info(JSON.stringify(callerIdResp, null, 2));
   core.info("<<<<");
 
+  new BuildConst(callerIdResp.Account!);
+
   process.env.AWS_ACCESS_KEY_ID = awsCreds.accessKeyId;
   process.env.AWS_SECRET_ACCESS_KEY = awsCreds.secretAccessKey;
   process.env.AWS_SESSION_TOKEN = awsCreds.sessionToken;
-  process.env.AWS_DEFAULT_REGION = ODMD_awsRegion;
+  process.env.AWS_DEFAULT_REGION = BuildConst.inst.awsRegion;
 
   const ssm = new SSMClient(awsSdkConfig);
 
   try {
+    let paramName = `/gyang-tst/${BuildConst.inst.buildId}/${BuildConst.inst.targetRevRef}/enver_config`;
+    console.log("paramName>>>" + paramName);
     const getParamOutput = await ssm.send(
       new GetParameterCommand({
-        Name: `/odmd/share/${ODMD_buildId}/${ODMD_targetRevRef}/odmd_enver_build_config`,
+        /*
+                todo: this is temp:
+                /gyang-tst/OdmdBuildDefaultVpcRds/us_west_1_420887418376_springcdkecs/enver_config
+                */
+        Name: paramName,
       }),
     );
 
@@ -97,11 +95,11 @@ ${input_creds_str}
     ) as Array<any>;
 
     let wfBuild: BuildNpm | BuildCimg | BuildCdk;
-    if (ODMD_buildType == "CdkGithubWF") {
+    if (BuildConst.inst.buildType == "CdkGithubWF") {
       wfBuild = new BuildCdk(args[0], args[1], args[2], args[3]);
-    } else if (ODMD_buildType == "ContainerImageEcr") {
+    } else if (BuildConst.inst.buildType == "ContainerImageEcr") {
       wfBuild = new BuildCimg(args[0], args[1], args[3]);
-    } else if (ODMD_buildType == "NpmPackGH") {
+    } else if (BuildConst.inst.buildType == "NpmPackGH") {
       wfBuild = new BuildNpm(args[0]);
     } else {
       throw new Error("N/A");

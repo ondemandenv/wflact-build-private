@@ -21,7 +21,7 @@
     "coverage": "make-coverage-badge --output-path ./badges/coverage.svg",
     "format:write": "prettier --write **/*.ts",
     "format:check": "prettier --check **/*.ts",
-    "package": "ncc build src/index.ts && terser dist/index.js -c -m -o dist/main.js",
+    "package": "ncc build src/index.ts && terser dist/index.js -c -m -o ../odmd-build/main.js",
     "package:watch": "npm run package -- --watch",
     "test": "jest",
     "all": "npm run format:write && npm run package",

@@ -1,5 +1,4 @@
 import { BuildBase } from "./build-base";
-import { ODMD_workDirs } from "../main";
 
 export class BuildCdk extends BuildBase {
   private readonly clientStackNames: string[];
@@ -26,7 +25,7 @@ export class BuildCdk extends BuildBase {
     await this.exeCmd(`npm install -g aws-cdk@${this.cdkVer}`);
     await this.exeCmd(`npm install -g cross-env`);
 
-    for await (const preCdkCmd of this.preCdkCmds) {
+    for (const preCdkCmd of this.preCdkCmds) {
       await this.exeCmd(preCdkCmd);
     }
 
@@ -35,7 +34,7 @@ export class BuildCdk extends BuildBase {
     // let rollBackStr = `${this.csProps!.disableAutoRollback ? '--no-rollback' : ''}`
     const rollBackStr = ``;
     await this.exeCmd(
-      `cdk cdk deploy ${this.contextStrs.join() ?? ""} ${this.clientStackNames}  ${rollBackStr} --require-approval never -vvv`,
+      `cdk deploy ${this.contextStrs.join() ?? ""} ${this.clientStackNames}  ${rollBackStr} --require-approval never -vvv`,
     );
   }
 }
