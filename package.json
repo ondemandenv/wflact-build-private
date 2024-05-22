@@ -21,7 +21,7 @@
     "package": "tsc --build --clean && tsc --build && ncc build src/index.ts && terser dist/index.js -c -m -o ../odmd-build/main.js",
     "package:watch": "npm run package -- --watch",
     "test": "jest",
-    "debug": "tsc --build --clean && tsc --build && ts-node src/debug.ts"
+    "debug": "tsc --build --clean && tsc --build && ts-node src/debug-ContainerImageEcr.ts"
   },
   "dependencies": {
     "@actions/core": "^1.10.1"

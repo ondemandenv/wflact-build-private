@@ -72,14 +72,6 @@ process.env.ANDROID_NDK_ROOT = "/usr/local/lib/android/sdk/ndk/25.2.9519653";
 process.env.SWIFT_PATH = "/usr/share/swift/usr/bin";
 process.env.GOROOT_1_21_X64 = "/opt/hostedtoolcache/go/1.21.10/x64";
 process.env.DOTNET_SKIP_FIRST_TIME_EXPERIENCE = "1";
-process.env.ODMD_buildId = "OdmdBuildDefaultVpcRds";
-process.env.ODMD_buildType = "CdkGithubWF";
-process.env.ODMD_awsRegion = "us-west-1";
-process.env.ODMD_AWS_CREDENTIALS = "***";
-process.env.INPUT_AWS_CREDENTIALS = `[590184031795_AdministratorAccess]
-aws_access_key_id=ASIAYS2NVUYZVK4ICWL6
-aws_secret_access_key=Sx2rWZ21CMo8tWU7id1xnlHfgRYkB1Q24bGcdlz/
-aws_session_token=IQoJb3JpZ2luX2VjEGMaCXVzLXdlc3QtMSJHMEUCIHxvPfRZyIP5j1pIF8g828kHot3wTsXIasZNgLTqjQcTAiEAnwy2TnUj4vZGuDtXUrBrKFjztMKERQ079AG74rkMMNAqlQMIzP//////////ARAAGgw1OTAxODQwMzE3OTUiDF2HukAZw8AOwa+rMCrpAvTeVd+DgXZbqnjM60rBQTVRUqEB12ImbDoX/EhSPsLLdCzGCwqRtYuScICtSqXMbLaOlQqT9xB2Z4QQekgpdMn/gG6wO1FZqXzVjl/Q57kZC1KcPPKkifnvSd0ndZzk780kpyX5nNeCKiP4PfB1jaAwt6t4FjB24EwxmI3sRCI5SARePDQaBklVx7IQndnuVGA1YV0u9TWsQZdg8oGHNyeaaHvdUPqd59B5XgBIDLY8r5mWqepqCcDFYTrCkIx9cyYRqYY0p53Nhu232dW/h7o6chjVclRHBcHCAny1gIL6ZN8sDAicRrpxEu2E/4sQZqtGHYYaDcdcsLsBtYd46PEw55F+7DvanvZyd2VFsoVe0sbqcsvnXo8a17OJZ+TSKTdMYLwEPVkdKI8FKCxjHwiHwLF+8KjqQUnQPmg5AjmZsmgV3yerzBcUS6goDCPeM6h9k7eQq46KB8gRP1+UE5SVcKuPXiWq8wEw74absgY6pgEDn9X6l+NhiBUBx9e51Isb8VMws+aLN2p9UFvPKMiYGSOtHrS23D1FJPRMif0tRL/l3BZJxhHRIBEZWVVTn7Hc0udl1UzaPpWzZMVMZz4EqfBQxSJ2zMYDLid1+ZOAdv/Bgrb+7XT14hLOae+V2RJjQzyYb7nTGd//vFV/2/wKnMilyhXS+Q8sZanMYn9bI2kQI3zpTcwUCDuB76I9Npf2lBz9vDKT`;
 process.env.GITHUB_JOB = "odmd_job";
 process.env.GITHUB_REF = "refs/heads/us_west_1_420887418376_springcdkecs";
 process.env.GITHUB_SHA = "4320203f01000ada7252cd9145a041f4ef68f841";
@@ -139,4 +131,12 @@ process.env.ACTIONS_CACHE_URL =
 process.env.ACTIONS_RESULTS_URL =
   "https://results-receiver.actions.githubusercontent.com/";
 
+process.env.ODMD_buildId = "OdmdBuildDefaultVpcRds";
+process.env.ODMD_buildType = "CdkGithubWF";
+process.env.ODMD_awsRegion = "us-west-1";
+process.env.ODMD_AWS_CREDENTIALS = "***";
+process.env.INPUT_AWS_CREDENTIALS = `[975050243618_AdministratorAccess]
+aws_access_key_id=ASIA6GBMF7YRORNFA7U4
+aws_secret_access_key=J+4edSeNlmI25r3c0tUY+czIf9KLtZTdDQLl88e6
+aws_session_token=IQoJb3JpZ2luX2VjEOr//////////wEaCXVzLXdlc3QtMSJGMEQCIH1n4b2XUyfIgWnoyFIOKUjmOMoiGfo0h8uaJhMgSOcRAiBz/+uIFb+hdwMGHBvmyxBfVlBxY3bFD1CMzxeU0FQ9FiqMAwhjEAAaDDk3NTA1MDI0MzYxOCIMgbFoyz6IToFJbZV7KukC24NAhnyA2MHPgIa1koLnG3znDX5pfMTjd+0Oi/zx9t/sQVvtRLuBVNbsdg42wSRb+lc4CMfs1FFvy9vyEepcKglzEBs+Qx6epoFfL0aqK14ME1tXpBli5rOdoNp6BL3cB1j3lv+nA/IUWhTrE7nsyCHWj9l77I8zvgvrz2UJpwTVTJ5yLzwxMfQd8zqOEPOwblXoCbgJiOT2pK2ytwWY3MnT4hyJG45+OMsXO4+kOcERg8U/u9tO12KLeuIZnk5MKjkEqmuz4ifq5qgWF9TTStTE0vK1HG3IhAEPFIC8dHFscEM1h+AEexTt9SONeTWHdzPKN3sjtYWe3Iw7AS7ePKyj9S2HawAgQC6ybSzEhjPODrgQTQCWcyt828TybLu37wEcuLL9ekYqCU1GkF1IXwclXR6en0AUS7mC7GAUXWTFtiZf2uVSj7hFsavTR0VasRfL5DgcPze8UnvmH91XjBAmDS7ymDM0mjCd7riyBjqnAcxLrXUz+LPHL3A+VAopOz+Kdj0mmU70S5qEgKtoes0iiJNsV25drjQW9sCjVjpFRLHc10CtxN94LwReJ+mC+Nftulfajz4an8sSthcm95M0LjAMxOvGUNBFKoltaUSPy5MVVNyIozQBUQTrGfnDTSmqNS2aZhlDx29MGrHYuBmLc0FfsAJLhnctqHIIN2nLR9/aJbyo5Tqmj3tj8Ic931fK95JEcTki`;
 run();

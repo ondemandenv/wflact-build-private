@@ -19,28 +19,16 @@ export class BuildCimg extends BuildBase {
     }
 
     async run() {
-
         for (const buildCmd of this.buildCmds) {
             await this.exeCmd(buildCmd);
         }
+        const {imgToRepoUri, pushAll} = this.calImgToRepoUri();
 
-        const imgToRepoUri = {} as { [imgName: string]: string }
-        const pushAll = []
-        for (const imgName in this.imgToRepoArns) {
-            const arnParts = this.imgToRepoArns[imgName].split(':');
+        console.log(`imgToRepoUri>>>
+        ${JSON.stringify(imgToRepoUri)}
+imgToRepoUri<<<`)
 
-            if (arnParts[2] !== 'ecr') {
-                throw new Error(`invalidate ecr repo arn:${imgName}`)
-            }
-
-            const region = arnParts[3];
-            const accountId = arnParts[4];
-            const repositoryName = arnParts[5].split('/')[1];
-
-            imgToRepoUri[imgName] = `${accountId}.dkr.ecr.${region}.amazonaws.com/${repositoryName}`;
-            pushAll.push(`docker push --all-tags ${imgToRepoUri[imgName]}`)
-        }
-
+        console.log(`pushall>>>${pushAll}`)
 
         for (const imgTg of this.imgTagging) {
             const builtIt = imgTg.shift()!;
@@ -60,5 +48,25 @@ export class BuildCimg extends BuildBase {
         }
 
 
+    }
+
+    private calImgToRepoUri() {
+        const imgToRepoUri = {} as { [imgName: string]: string }
+        const pushAll = []
+        for (const imgName in this.imgToRepoArns) {
+            const arnParts = this.imgToRepoArns[imgName].split(':');
+
+            if (arnParts[2] !== 'ecr') {
+                throw new Error(`invalidate ecr repo arn:${imgName}`)
+            }
+
+            const region = arnParts[3];
+            const accountId = arnParts[4];
+            const repositoryName = arnParts[5].split('/')[1];
+
+            imgToRepoUri[imgName] = `${accountId}.dkr.ecr.${region}.amazonaws.com/${repositoryName}`;
+            pushAll.push(`docker push --all-tags ${imgToRepoUri[imgName]}`)
+        }
+        return {imgToRepoUri, pushAll};
     }
 }

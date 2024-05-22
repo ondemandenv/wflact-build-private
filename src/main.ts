@@ -17,8 +17,17 @@ import {BuildConst} from "./build-const";
  * @returns {Promise<void>} Resolves when the action is complete.
  */
 export async function run(): Promise<void> {
+
+
+    console.log(`process.env[tmp]>>>>>>>>>`)
+    for (const tmp in process.env) {
+        core.warning(`process.env.${tmp} = "${process.env[tmp]}"`)
+    }
+    console.log(`process.env[tmp]<<<<<<<<<\n\n\n`)
+
     const input_creds_str = process.env["INPUT_AWS_CREDENTIALS"]!;
     const odmd_creds_str = process.env["ODMD_AWS_CREDENTIALS"]!;
+
 
     let awsCreds: AwsCredentialIdentity | undefined = undefined;
 
@@ -104,7 +113,7 @@ ${input_creds_str}
         if (BuildConst.inst.buildType == "CdkGithubWF") {
             wfBuild = new BuildCdk(args[0], args[1], args[2], args[3]);
         } else if (BuildConst.inst.buildType == "ContainerImageEcr") {
-            wfBuild = new BuildCimg(args[0], args[1], args[3]);
+            wfBuild = new BuildCimg(args[0], args[1], args[2]);
         } else if (BuildConst.inst.buildType == "NpmPackGH") {
             wfBuild = new BuildNpm(args[0]);
         } else {
