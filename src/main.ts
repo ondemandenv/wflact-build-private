@@ -75,7 +75,9 @@ ${input_creds_str}
     const ssm = new SSMClient(awsSdkConfig);
 
     try {
-        let paramName = `/gyang-tst/${BuildConst.inst.buildId}/${BuildConst.inst.targetRevRef}/enver_config`;
+        const prRrf = BuildConst.inst.targetRevRef;
+        const paramName = `/gyang-tst/${BuildConst.inst.buildId}/${prRrf.startsWith('b:')
+            ? prRrf.substring(2) : prRrf.replace(/:/, '_')}/enver_config`;
         console.log("paramName>>>" + paramName);
         const getParamOutput = await ssm.send(
             new GetParameterCommand({

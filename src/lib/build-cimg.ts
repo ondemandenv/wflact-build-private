@@ -1,21 +1,64 @@
-import { BuildBase } from "./build-base";
+import {BuildBase} from "./build-base";
+import {BuildConst} from "../build-const";
 
 export class BuildCimg extends BuildBase {
-  private readonly buildCmds: String[];
-  private readonly imgTagging: string[][];
-  private readonly imgToRepoArns: { [p: string]: string };
+    private readonly buildCmds: string[];
+    private readonly imgTagging: string[][];
+    private readonly imgToRepoArns: { [p: string]: string };
 
-  //lib/repo-build-pp-container-image-to-ecr-with-github-workflow.ts createRepobuildImplPerBranch
-  constructor(
-    buildCmds: String[],
-    imgTagging: string[][],
-    imgToRepoArns: { [p: string]: string },
-  ) {
-    super();
-    this.buildCmds = buildCmds;
-    this.imgTagging = imgTagging;
-    this.imgToRepoArns = imgToRepoArns;
-  }
+    //lib/repo-build-pp-container-image-to-ecr-with-github-workflow.ts createRepobuildImplPerBranch
+    constructor(
+        buildCmds: string[],
+        imgTagging: string[][],
+        imgToRepoArns: { [p: string]: string },
+    ) {
+        super();
+        this.buildCmds = buildCmds;
+        this.imgTagging = imgTagging;
+        this.imgToRepoArns = imgToRepoArns;
+    }
 
-  async run() {}
+    async run() {
+
+        for (const buildCmd of this.buildCmds) {
+            await this.exeCmd(buildCmd);
+        }
+
+        const imgToRepoUri = {} as { [imgName: string]: string }
+        const pushAll = []
+        for (const imgName in this.imgToRepoArns) {
+            const arnParts = this.imgToRepoArns[imgName].split(':');
+
+            if (arnParts[2] !== 'ecr') {
+                throw new Error(`invalidate ecr repo arn:${imgName}`)
+            }
+
+            const region = arnParts[3];
+            const accountId = arnParts[4];
+            const repositoryName = arnParts[5].split('/')[1];
+
+            imgToRepoUri[imgName] = `${accountId}.dkr.ecr.${region}.amazonaws.com/${repositoryName}`;
+            pushAll.push(`docker push --all-tags ${imgToRepoUri[imgName]}`)
+        }
+
+
+        for (const imgTg of this.imgTagging) {
+            const builtIt = imgTg.shift()!;
+            // const imgName = builtIt.split(':')[0]
+
+            for (const tt of imgTg) {
+                await this.exeCmd(`docker tag ${builtIt} ${imgToRepoUri[builtIt]}:${tt}`)
+            }
+        }
+
+        const getEcrPassCmd = `aws ecr get-login-password --region ${BuildConst.inst.awsRegion}`;
+        const loginEcrCmd = `docker login --username AWS --password-stdin ${BuildConst.inst.awsAccount}.dkr.ecr.${BuildConst.inst.awsRegion}.amazonaws.com`;
+        await this.exeCmd(` ${getEcrPassCmd} | ${loginEcrCmd} `)
+
+        for (const p of pushAll) {
+            await this.exeCmd(`${p}`)
+        }
+
+
+    }
 }

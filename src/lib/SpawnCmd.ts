@@ -2,10 +2,12 @@ import {spawn, SpawnOptionsWithoutStdio, ChildProcessWithoutNullStreams} from 'c
 
 export class SpawnCmd {
 
+    private cwd: string;
     private command: string;
     private args: string[];
 
-    constructor(command: string, args: string[] = []) {
+    constructor(cwd: string, command: string, args: string[] = []) {
+        this.cwd = cwd;
         this.command = command;
         this.args = args;
     }
@@ -14,6 +16,7 @@ export class SpawnCmd {
         return new Promise((resolve, reject) => {
             const options: SpawnOptionsWithoutStdio = {
                 shell: true,
+                cwd: this.cwd
             };
             const child: ChildProcessWithoutNullStreams = spawn(this.command, this.args, options);
 
@@ -33,6 +36,9 @@ export class SpawnCmd {
             });
 
             child.on('close', (exitCode: number) => {
+                if (exitCode != 0) {
+                    throw new Error("Failed")
+                }
                 resolve(stdout);
             });
 
