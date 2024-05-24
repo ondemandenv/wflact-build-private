@@ -1,4 +1,5 @@
 import {BuildBase} from "./build-base";
+import {CloudFormationClient, DescribeStacksCommand} from "@aws-sdk/client-cloudformation";
 
 export class BuildCdk extends BuildBase {
     private readonly clientStackNames: string[];
@@ -20,6 +21,7 @@ export class BuildCdk extends BuildBase {
     }
 
     async run() {
+
         await super.run();
 
         await this.exeCmd(`npm install -g aws-cdk@${this.cdkVer}`);
@@ -31,12 +33,31 @@ export class BuildCdk extends BuildBase {
         }
 
         await this.exeCmd(`cdk ls`);
-        // let rollBackStr = `${this.csProps!.disableAutoRollback ? '--no-rollback' : ''}`
-        const rollBackStr = ``;
+
+        const client = new CloudFormationClient({region: process.env.AWS_DEFAULT_REGION!});
+        const stackExists = await Promise.all(this.clientStackNames.map(async stackName => {
+            try {
+                await client.send(new DescribeStacksCommand({StackName: stackName}));
+                return true;
+            } catch (er) {
+                const error = er as Error
+                if (error.name === 'ValidationError' && error.message.includes('does not exist')) {
+                    return false;
+                } else {
+                    throw error;
+                }
+            }
+        }))
+
+
         const contextsStr = this.contextStrs.join() ?? "";
 
-        for (const clientStackName of this.clientStackNames) {
-            await this.exeCmd(`cdk`, [`deploy`, contextsStr, clientStackName, rollBackStr, '--require-approval never'])
+        for (let i = 0; i < this.clientStackNames.length; i++) {
+            const clientStackName = this.clientStackNames[i];
+            const rollBackStr = stackExists[i] ? '' : '--no-rollback';
+            const args = [`deploy`, contextsStr, clientStackName, rollBackStr, '--require-approval never']
+            // console.log(args)
+            await this.exeCmd(`cdk`, args )
         }
     }
 }
