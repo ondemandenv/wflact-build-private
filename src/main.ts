@@ -83,48 +83,44 @@ ${input_creds_str}
 
     const ssm = new SSMClient(awsSdkConfig);
 
-    try {
-        const prRrf = BuildConst.inst.targetRevRef;
-        const paramName = `/gyang-tst/${BuildConst.inst.buildId}/${prRrf.startsWith('b:')
-            ? prRrf.substring(2) : prRrf.replace(/:/, '_')}/enver_config`;
-        console.log("paramName>>>" + paramName);
-        const getParamOutput = await ssm.send(
-            new GetParameterCommand({
-                /*
-                                todo: this is temp:
-                                /gyang-tst/OdmdBuildDefaultVpcRds/us_west_1_420887418376_springcdkecs/enver_config
-                                */
-                Name: paramName,
-            }),
-        );
+    const prRrf = BuildConst.inst.targetRevRef;
+    const paramName = `/gyang-tst/${BuildConst.inst.buildId}/${prRrf.startsWith('b:')
+        ? prRrf.substring(2) : prRrf.replace(/:/, '_')}/enver_config`;
+    console.log("paramName>>>" + paramName);
+    const getParamOutput = await ssm.send(
+        new GetParameterCommand({
+            /*
+                            todo: this is temp:
+                            /gyang-tst/OdmdBuildDefaultVpcRds/us_west_1_420887418376_springcdkecs/enver_config
+                            */
+            Name: paramName,
+        }),
+    );
 
-        core.info("getParamOutput>>");
-        core.info(JSON.stringify(getParamOutput));
+    core.info("getParamOutput>>");
+    core.info(JSON.stringify(getParamOutput));
 
-        // const enverConfigStr = Buffer.from(getParamOutput.Parameter!.Value!, "base64",).toString("utf-8");
-        const enverConfigStr = getParamOutput.Parameter!.Value!;
-        core.info("----------" + enverConfigStr);
-        const args = JSON.parse(enverConfigStr) as Array<any>;
-        core.info("getParamOutput<<");
+    // const enverConfigStr = Buffer.from(getParamOutput.Parameter!.Value!, "base64",).toString("utf-8");
+    const enverConfigStr = getParamOutput.Parameter!.Value!;
+    core.info("----------" + enverConfigStr);
+    const args = JSON.parse(enverConfigStr) as Array<any>;
+    core.info("getParamOutput<<");
 
-        process.env.ODMD_ACCOUNTS = args.shift()
+    process.env.ODMD_ACCOUNTS = args.shift()
 
-        let wfBuild: BuildNpm | BuildCimg | BuildCdk;
-        if (BuildConst.inst.buildType == "CdkGithubWF") {
-            wfBuild = new BuildCdk(args[0], args[1], args[2], args[3]);
-        } else if (BuildConst.inst.buildType == "ContainerImageEcr") {
-            wfBuild = new BuildCimg(args[0], args[1], args[2]);
-        } else if (BuildConst.inst.buildType == "NpmPackGH") {
-            wfBuild = new BuildNpm(args[0]);
-        } else {
-            throw new Error("N/A");
-        }
-        core.info("wfBuild.run>>");
-        await wfBuild.run();
-        core.info("wfBuild.run<<");
-    } catch (e) {
-        core.error(e as Error);
+    let wfBuild: BuildNpm | BuildCimg | BuildCdk;
+    if (BuildConst.inst.buildType == "CdkGithubWF") {
+        wfBuild = new BuildCdk(args[0], args[1], args[2], args[3]);
+    } else if (BuildConst.inst.buildType == "ContainerImageEcr") {
+        wfBuild = new BuildCimg(args[0], args[1], args[2]);
+    } else if (BuildConst.inst.buildType == "NpmPackGH") {
+        wfBuild = new BuildNpm(args[0]);
+    } else {
+        throw new Error("N/A");
     }
+    core.info("wfBuild.run>>");
+    await wfBuild.run();
+    core.info("wfBuild.run<<");
 
     return Promise.resolve();
 }

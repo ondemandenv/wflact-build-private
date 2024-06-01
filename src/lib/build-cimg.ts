@@ -19,6 +19,8 @@ export class BuildCimg extends BuildBase {
     }
 
     async run() {
+        await super.run()
+        
         for (const buildCmd of this.buildCmds) {
             await this.exeCmd(buildCmd);
         }
