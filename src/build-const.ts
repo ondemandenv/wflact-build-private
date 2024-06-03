@@ -16,6 +16,7 @@ export class BuildConst {
         //todo:
         this._targetRevRef = 'b:' + process.env["GITHUB_REF_NAME"]!;
         this._workflowName = process.env["GITHUB_WORKFLOW"]!;
+        this._githubSHA = process.env["GITHUB_SHA"]!;
 
         if (BuildConst._inst) {
             throw new Error("singleton");
@@ -30,6 +31,7 @@ export class BuildConst {
     private _awsAccount: string;
     private _targetRevRef: string;
     private _workflowName: string;
+    private _githubSHA: string;
 
     public get buildId() {
         return this._buildId;
@@ -57,5 +59,8 @@ export class BuildConst {
 
     public get workflowName() {
         return this._workflowName;
+    }
+    public get githubSHA() {
+        return this._githubSHA;
     }
 }

@@ -31,23 +31,28 @@ export async function run(): Promise<void> {
 
     let awsCreds: AwsCredentialIdentity | undefined = undefined;
 
-    if (input_creds_str && input_creds_str.startsWith("[")) {
-        const regex =
-            /\[(.+?)\]\s+aws_access_key_id=(.+?)\s+aws_secret_access_key=(.+?)\s+aws_session_token=(.+)/;
-        const match = input_creds_str.match(regex);
+    try {
+        if (input_creds_str && input_creds_str.startsWith("[")) {
+            const regex =
+                /\[(.+?)\]\s+aws_access_key_id=(.+?)\s+aws_secret_access_key=(.+?)\s+aws_session_token=(.+)/;
+            const match = input_creds_str.match(regex);
 
-        if (match) {
-            const [org, profile, accessKeyId, secretAccessKey, sessionToken] = match;
-            awsCreds = {
-                accessKeyId,
-                secretAccessKey,
-                sessionToken,
-            } as AwsCredentialIdentity;
-        } else {
-            console.warn(`can't find match to input: 
-${input_creds_str}
-`);
+            if (match) {
+                const [org, profile, accessKeyId, secretAccessKey, sessionToken] = match;
+                awsCreds = {
+                    accessKeyId,
+                    secretAccessKey,
+                    sessionToken,
+                } as AwsCredentialIdentity;
+            } else {
+                console.warn(`can't find match to input: 
+    ${input_creds_str}
+    `);
+            }
         }
+    } catch (e) {
+        console.error(e)
+        throw e
     }
 
     if (!awsCreds) {
@@ -59,6 +64,7 @@ ${input_creds_str}
         };
     }
     if (!awsCreds) {
+        console.error(`can't find aws creds!`);
         throw new Error(`can't find aws creds!`);
     }
 
@@ -66,55 +72,62 @@ ${input_creds_str}
         region: process.env["ODMD_awsRegion"]!,
         credentials: awsCreds,
     };
-    const sts = new STSClient(awsSdkConfig);
-    const callerIdResp = await sts.send(new GetCallerIdentityCommand({}));
 
-    core.info(">>>>");
-    core.info(JSON.stringify(callerIdResp, null, 2));
-    core.info("<<<<");
+    let buildArgs
+    try {
+        const sts = new STSClient(awsSdkConfig);
+        const callerIdResp = await sts.send(new GetCallerIdentityCommand({}));
 
-    new BuildConst(callerIdResp.Account!);
+        core.info(">>>>");
+        core.info(JSON.stringify(callerIdResp, null, 2));
+        core.info("<<<<");
 
-    process.env.AWS_ACCESS_KEY_ID = awsCreds.accessKeyId;
-    process.env.AWS_SECRET_ACCESS_KEY = awsCreds.secretAccessKey;
-    process.env.AWS_SESSION_TOKEN = awsCreds.sessionToken;
-    process.env.AWS_DEFAULT_REGION = BuildConst.inst.awsRegion;
-    process.env.target_rev_ref = BuildConst.inst.targetRevRef;
+        new BuildConst(callerIdResp.Account!);
 
-    const ssm = new SSMClient(awsSdkConfig);
+        process.env.AWS_ACCESS_KEY_ID = awsCreds.accessKeyId;
+        process.env.AWS_SECRET_ACCESS_KEY = awsCreds.secretAccessKey;
+        process.env.AWS_SESSION_TOKEN = awsCreds.sessionToken;
+        process.env.AWS_DEFAULT_REGION = BuildConst.inst.awsRegion;
+        process.env.target_rev_ref = BuildConst.inst.targetRevRef;
 
-    const prRrf = BuildConst.inst.targetRevRef;
-    const paramName = `/gyang-tst/${BuildConst.inst.buildId}/${prRrf.startsWith('b:')
-        ? prRrf.substring(2) : prRrf.replace(/:/, '_')}/enver_config`;
-    console.log("paramName>>>" + paramName);
-    const getParamOutput = await ssm.send(
-        new GetParameterCommand({
-            /*
-                            todo: this is temp:
-                            /gyang-tst/OdmdBuildDefaultVpcRds/us_west_1_420887418376_springcdkecs/enver_config
-                            */
-            Name: paramName,
-        }),
-    );
+        const ssm = new SSMClient(awsSdkConfig);
 
-    core.info("getParamOutput>>");
-    core.info(JSON.stringify(getParamOutput));
+        const prRrf = BuildConst.inst.targetRevRef;
+        const paramName = `/gyang-tst/${BuildConst.inst.buildId}/${prRrf.startsWith('b:')
+            ? prRrf.substring(2) : prRrf.replace(/:/, '_')}/enver_config`;
+        console.log("paramName>>>" + paramName);
+        const getParamOutput = await ssm.send(
+            new GetParameterCommand({
+                /*
+                                todo: this is temp:
+                                /gyang-tst/OdmdBuildDefaultVpcRds/us_west_1_420887418376_springcdkecs/enver_config
+                                */
+                Name: paramName,
+            }),
+        );
 
-    // const enverConfigStr = Buffer.from(getParamOutput.Parameter!.Value!, "base64",).toString("utf-8");
-    const enverConfigStr = getParamOutput.Parameter!.Value!;
-    core.info("----------" + enverConfigStr);
-    const args = JSON.parse(enverConfigStr) as Array<any>;
-    core.info("getParamOutput<<");
+        core.info("getParamOutput>>");
+        core.info(JSON.stringify(getParamOutput));
 
-    process.env.ODMD_ACCOUNTS = args.shift()
+        // const enverConfigStr = Buffer.from(getParamOutput.Parameter!.Value!, "base64",).toString("utf-8");
+        const enverConfigStr = getParamOutput.Parameter!.Value!;
+        core.info("----------" + enverConfigStr);
+        buildArgs = JSON.parse(enverConfigStr) as Array<any>;
+        core.info("getParamOutput<<");
+
+        process.env.ODMD_ACCOUNTS = buildArgs.shift()
+    } catch (e) {
+        console.error(e)
+        throw e
+    }
 
     let wfBuild: BuildNpm | BuildCimg | BuildCdk;
     if (BuildConst.inst.buildType == "CdkGithubWF") {
-        wfBuild = new BuildCdk(args[0], args[1], args[2], args[3]);
+        wfBuild = new BuildCdk(buildArgs[0], buildArgs[1], buildArgs[2], buildArgs[3]);
     } else if (BuildConst.inst.buildType == "ContainerImageEcr") {
-        wfBuild = new BuildCimg(args[0], args[1], args[2]);
+        wfBuild = new BuildCimg(buildArgs[0], buildArgs[1], buildArgs[2]);
     } else if (BuildConst.inst.buildType == "NpmPackGH") {
-        wfBuild = new BuildNpm(args[0]);
+        wfBuild = new BuildNpm(buildArgs[0]);
     } else {
         throw new Error("N/A");
     }

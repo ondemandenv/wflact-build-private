@@ -3,24 +3,24 @@ import {BuildConst} from "../build-const";
 
 export class BuildCimg extends BuildBase {
     private readonly buildCmds: string[];
-    private readonly imgTagging: string[][];
-    private readonly imgToRepoArns: { [p: string]: string };
+    private readonly imgNameToExtraTag: string[][];
+    private readonly imgNameToRepoArn: { [p: string]: string };
 
     //lib/repo-build-pp-container-image-to-ecr-with-github-workflow.ts createRepobuildImplPerBranch
     constructor(
         buildCmds: string[],
-        imgTagging: string[][],
+        imgNameToExtraTag: string[][],
         imgToRepoArns: { [p: string]: string },
     ) {
         super();
         this.buildCmds = buildCmds;
-        this.imgTagging = imgTagging;
-        this.imgToRepoArns = imgToRepoArns;
+        this.imgNameToExtraTag = imgNameToExtraTag;
+        this.imgNameToRepoArn = imgToRepoArns;
     }
 
     async run() {
         await super.run()
-        
+
         for (const buildCmd of this.buildCmds) {
             await this.exeCmd(buildCmd);
         }
@@ -32,9 +32,11 @@ imgToRepoUri<<<`)
 
         console.log(`pushall>>>${pushAll}`)
 
-        for (const imgTg of this.imgTagging) {
+        for (const imgTg of this.imgNameToExtraTag) {
             const builtIt = imgTg.shift()!;
             // const imgName = builtIt.split(':')[0]
+            await this.exeCmd(`docker tag ${builtIt} ${imgToRepoUri[builtIt]}:latest`)
+            await this.exeCmd(`docker tag ${builtIt} ${imgToRepoUri[builtIt]}:${BuildConst.inst.githubSHA}`)
 
             for (const tt of imgTg) {
                 await this.exeCmd(`docker tag ${builtIt} ${imgToRepoUri[builtIt]}:${tt}`)
@@ -55,8 +57,8 @@ imgToRepoUri<<<`)
     private calImgToRepoUri() {
         const imgToRepoUri = {} as { [imgName: string]: string }
         const pushAll = []
-        for (const imgName in this.imgToRepoArns) {
-            const arnParts = this.imgToRepoArns[imgName].split(':');
+        for (const imgName in this.imgNameToRepoArn) {
+            const arnParts = this.imgNameToRepoArn[imgName].split(':');
 
             if (arnParts[2] !== 'ecr') {
                 throw new Error(`invalidate ecr repo arn:${imgName}`)
