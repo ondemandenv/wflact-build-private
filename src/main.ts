@@ -4,7 +4,6 @@ import {
     GetCallerIdentityCommand,
     STSClient,
 } from "@aws-sdk/client-sts";
-import * as process from "process";
 import {AwsCredentialIdentity} from "@smithy/types";
 import {GetParameterCommand, SSMClient} from "@aws-sdk/client-ssm";
 import {BuildCimg} from "./lib/build-cimg";

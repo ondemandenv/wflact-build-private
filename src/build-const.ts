@@ -1,4 +1,3 @@
-import * as process from "node:process";
 
 export class BuildConst {
     private static _inst: BuildConst;
@@ -18,7 +17,7 @@ export class BuildConst {
         // Warning: process.env.GITHUB_REF = "refs/heads/odmdSbxUsw1"
 
         const ghRefArr = process.env["GITHUB_REF"]!.split('/');
-        this._targetRevRef = (ghRefArr[1] == 'heads' ? 'b' : 't') + ghRefArr[2]
+        this._targetRevRef = (ghRefArr[1] == 'heads' ? 'b' : 't') + ':' + ghRefArr[2]
         this._targetRevRefPathPart = (ghRefArr[1] == 'heads' ? '' : 't_') + ghRefArr[2]
         this._workflowName = process.env["GITHUB_WORKFLOW"]!;
         this._githubSHA = process.env["GITHUB_SHA"]!;
