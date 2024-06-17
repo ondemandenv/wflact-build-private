@@ -1,6 +1,12 @@
 import {BuildBase} from "./build-base";
 import {CloudFormationClient, DescribeStacksCommand} from "@aws-sdk/client-cloudformation";
 
+
+import * as fs from 'fs';
+import {BuildConst} from "../build-const";
+import {PutParameterCommand, SSMClient} from "@aws-sdk/client-ssm";
+
+
 export class BuildCdk extends BuildBase {
     private readonly clientStackNames: string[];
     private readonly cdkVer: string;
@@ -20,9 +26,21 @@ export class BuildCdk extends BuildBase {
         this.contextStrs = ctxStr;
     }
 
-    async run() {
 
+    async run() {
         await super.run();
+        const pkgDeps: { [k: string]: string } = {}
+        const pkgJsn = JSON.parse(fs.readFileSync('package.json', 'utf-8'));
+        for (const k in pkgJsn.devDependencies) {
+            if (k.startsWith("@ondemandenv/")) {
+                pkgDeps[k] = pkgJsn.devDependencies[k]
+            }
+        }
+        for (const k in pkgJsn.dependencies) {
+            if (k.startsWith("@ondemandenv/")) {
+                pkgDeps[k] = pkgJsn.dependencies[k]
+            }
+        }
 
         await this.exeCmd(`npm install -g aws-cdk@${this.cdkVer}`);
         await this.exeCmd(`npm install -g cross-env`);
@@ -50,14 +68,20 @@ export class BuildCdk extends BuildBase {
         }))
 
 
-        const contextsStr = this.contextStrs.join() ?? "";
-
         for (let i = 0; i < this.clientStackNames.length; i++) {
             const clientStackName = this.clientStackNames[i];
             const rollBackStr = stackExists[i] ? '' : '--no-rollback';
-            const args = [`deploy`, contextsStr, clientStackName, rollBackStr, '--require-approval never']
+            const args = [`deploy`, this.contextStrs.join() ?? "", clientStackName, rollBackStr, '--require-approval never']
             // console.log(args)
-            await this.exeCmd(`cdk`, args )
+            await this.exeCmd(`cdk`, args)
         }
+
+        const ssm = new SSMClient({region: BuildConst.inst.awsRegion})
+        await ssm.send(new PutParameterCommand({
+            //todo: process.env["GITHUB_REF_NAME"]! t and r ?
+            Name: `/odmd/${BuildConst.inst.buildId}/${BuildConst.inst.targetRevRefPathPart}/stacks_deps`,
+            Value: JSON.stringify(pkgDeps)
+        }))
+
     }
 }

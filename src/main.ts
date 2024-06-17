@@ -18,7 +18,6 @@ import {BuildConst} from "./build-const";
  */
 export async function run(): Promise<void> {
 
-
     console.log(`process.env[tmp]>>>>>>>>>`)
     for (const tmp in process.env) {
         core.warning(`process.env.${tmp} = "${process.env[tmp]}"`)
@@ -93,8 +92,7 @@ export async function run(): Promise<void> {
         const ssm = new SSMClient(awsSdkConfig);
 
         const prRrf = BuildConst.inst.targetRevRef;
-        const paramName = `/gyang-tst/${BuildConst.inst.buildId}/${prRrf.startsWith('b:')
-            ? prRrf.substring(2) : prRrf.replace(/:/, '_')}/enver_config`;
+        const paramName = `/odmd/${BuildConst.inst.buildId}/${BuildConst.inst.targetRevRefPathPart}/enver_config`;
         console.log("paramName>>>" + paramName);
         const getParamOutput = await ssm.send(
             new GetParameterCommand({
