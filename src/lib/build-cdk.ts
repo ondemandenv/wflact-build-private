@@ -1,10 +1,8 @@
 import {BuildBase} from "./build-base";
 import {CloudFormationClient, DescribeStacksCommand} from "@aws-sdk/client-cloudformation";
 
-import * as core from "@actions/core";
 import * as fs from 'fs';
 import {BuildConst} from "../build-const";
-import {PutParameterCommand, SSMClient} from "@aws-sdk/client-ssm";
 
 
 export class BuildCdk extends BuildBase {
@@ -71,25 +69,13 @@ export class BuildCdk extends BuildBase {
         for (let i = 0; i < this.clientStackNames.length; i++) {
             const clientStackName = this.clientStackNames[i];
             const rollBackStr = stackExists[i] ? '' : '--no-rollback';
-            const args = [`deploy`, this.contextStrs.join() ?? "", clientStackName, rollBackStr, '--require-approval never']
+            const params = [
+                `--parameters odmd-dep-rev=${JSON.stringify(pkgDeps)}`,
+                `--parameters build-src-rev=${BuildConst.inst.githubSHA}`
+            ].join(' ')
+            const args = [`deploy`, this.contextStrs.join() ?? "", clientStackName, rollBackStr, params, '--require-approval never']
             // console.log(args)
             await this.exeCmd(`cdk`, args)
         }
-
-        const ssm = new SSMClient({region: BuildConst.inst.awsRegion})
-
-        try {
-            const putdeps = await ssm.send(new PutParameterCommand({
-                Name: `/odmd/${BuildConst.inst.buildId}/${BuildConst.inst.targetRevRefPathPart}/stacks_deps`,
-                Overwrite: true,
-                Type: 'String',
-                Value: JSON.stringify(pkgDeps)
-            }))
-
-            console.log(JSON.stringify(putdeps))
-        } catch (e) {
-            core.error(JSON.stringify(e));
-        }
-
     }
 }
