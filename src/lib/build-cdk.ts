@@ -1,7 +1,7 @@
 import {BuildBase} from "./build-base";
 import {CloudFormationClient, DescribeStacksCommand} from "@aws-sdk/client-cloudformation";
 
-
+import * as core from "@actions/core";
 import * as fs from 'fs';
 import {BuildConst} from "../build-const";
 import {PutParameterCommand, SSMClient} from "@aws-sdk/client-ssm";
@@ -77,11 +77,19 @@ export class BuildCdk extends BuildBase {
         }
 
         const ssm = new SSMClient({region: BuildConst.inst.awsRegion})
-        await ssm.send(new PutParameterCommand({
-            //todo: process.env["GITHUB_REF_NAME"]! t and r ?
-            Name: `/odmd/${BuildConst.inst.buildId}/${BuildConst.inst.targetRevRefPathPart}/stacks_deps`,
-            Value: JSON.stringify(pkgDeps)
-        }))
+
+        try {
+            const putdeps = await ssm.send(new PutParameterCommand({
+                Name: `/odmd/${BuildConst.inst.buildId}/${BuildConst.inst.targetRevRefPathPart}/stacks_deps`,
+                Overwrite: true,
+                Type: 'String',
+                Value: JSON.stringify(pkgDeps)
+            }))
+
+            console.log(JSON.stringify(putdeps))
+        } catch (e) {
+            core.error(JSON.stringify(e));
+        }
 
     }
 }
