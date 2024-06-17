@@ -65,13 +65,12 @@ export class BuildCdk extends BuildBase {
             }
         }))
 
-
         for (let i = 0; i < this.clientStackNames.length; i++) {
             const clientStackName = this.clientStackNames[i];
             const rollBackStr = stackExists[i] ? '' : '--no-rollback';
             const params = [
-                `--parameters odmd-dep-rev=${JSON.stringify(pkgDeps)}`,
-                `--parameters build-src-rev=${BuildConst.inst.githubSHA}`
+                `--parameters ODMD_DEP_REV=${JSON.stringify(pkgDeps)}`,
+                `--parameters BUILD_SRC_REV=${BuildConst.inst.githubSHA}`
             ].join(' ')
             const args = [`deploy`, this.contextStrs.join() ?? "", clientStackName, rollBackStr, params, '--require-approval never']
             // console.log(args)
