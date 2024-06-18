@@ -21,6 +21,7 @@ export class BuildConst {
         this._targetRevRefPathPart = (ghRefArr[1] == 'heads' ? '' : 't_') + ghRefArr[2]
         this._workflowName = process.env["GITHUB_WORKFLOW"]!;
         this._githubSHA = process.env["GITHUB_SHA"]!;
+        this._githubRepo = process.env["GITHUB_REPOSITORY"]!;
 
         if (BuildConst._inst) {
             throw new Error("singleton");
@@ -37,6 +38,7 @@ export class BuildConst {
     private _targetRevRefPathPart: string;
     private _workflowName: string;
     private _githubSHA: string;
+    private _githubRepo: string;
 
     public get buildId() {
         return this._buildId;
@@ -71,5 +73,8 @@ export class BuildConst {
 
     public get githubSHA() {
         return this._githubSHA;
+    }
+    public get githubRepo() {
+        return this._githubRepo;
     }
 }
