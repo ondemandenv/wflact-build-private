@@ -28,7 +28,7 @@ export class BuildCdk extends BuildBase {
     async run() {
         await super.run();
         const pkgDeps: { [k: string]: string } = {}
-        const pkgJsn = JSON.parse(fs.readFileSync('package.json', 'utf-8'));
+        const pkgJsn = JSON.parse(fs.readFileSync(BuildConst.inst.workDirs + '/package.json', 'utf-8'));
         for (const k in pkgJsn.devDependencies) {
             if (k.startsWith("@ondemandenv/")) {
                 pkgDeps[k] = pkgJsn.devDependencies[k]
@@ -42,12 +42,12 @@ export class BuildCdk extends BuildBase {
 
         await this.exeCmd(`npm install -g aws-cdk@${this.cdkVer}`);
         await this.exeCmd(`npm install -g cross-env`);
-        await this.exeCmd(`npm install`);
 
         for (const preCdkCmd of this.preCdkCmds) {
             await this.exeCmd(preCdkCmd);
         }
 
+        await this.exeCmd(`npm install`);
         await this.exeCmd(`cdk ls`);
 
         const client = new CloudFormationClient({region: process.env.AWS_DEFAULT_REGION!});
