@@ -39,7 +39,8 @@ imgToRepoUri<<<`)
             await this.exeCmd(`docker tag ${builtIt} ${imgToRepoUri[builtIt]}:${BuildConst.inst.githubSHA}`)
 
             for (const tt of imgTg) {
-                await this.exeCmd(`docker tag ${builtIt} ${imgToRepoUri[builtIt]}:${tt}`)
+                if (tt.length > 2)
+                    await this.exeCmd(`docker tag ${builtIt} ${imgToRepoUri[builtIt]}:${tt}`)
             }
         }
 
