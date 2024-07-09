@@ -59,6 +59,7 @@ imgToRepoUri<<<`)
         const imgToRepoUri = {} as { [imgName: string]: string }
         const pushAll = []
         for (const imgName in this.imgNameToRepoArn) {
+            //arn:aws:ecr:us-west-1:975050243618:repository/spring-rds-img/cdk-spring-rds-appbodmdsbxusw1
             const arnParts = this.imgNameToRepoArn[imgName].split(':');
 
             if (arnParts[2] !== 'ecr') {
@@ -66,8 +67,10 @@ imgToRepoUri<<<`)
             }
 
             const region = arnParts[3];
+            //975050243618
             const accountId = arnParts[4];
-            const repositoryName = arnParts[5].split('/')[1];
+            //repository/spring-rds-img/cdk-spring-rds-appbodmdsbxusw1
+            const repositoryName = arnParts[5].substring( 'repository/'.length);
 
             imgToRepoUri[imgName] = `${accountId}.dkr.ecr.${region}.amazonaws.com/${repositoryName}`;
             pushAll.push(`docker push --all-tags ${imgToRepoUri[imgName]}`)
