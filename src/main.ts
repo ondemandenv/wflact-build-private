@@ -1,15 +1,9 @@
 import * as core from "@actions/core";
-import {
-    Credentials,
-    GetCallerIdentityCommand,
-    STSClient,
-} from "@aws-sdk/client-sts";
-import {AwsCredentialIdentity} from "@smithy/types";
-import {GetParameterCommand, SSMClient} from "@aws-sdk/client-ssm";
 import {BuildCimg} from "./lib/build-cimg";
 import {BuildCdk} from "./lib/build-cdk";
 import {BuildNpm} from "./lib/build-npm";
 import {BuildConst} from "./build-const";
+import * as process from "node:process";
 
 /**
  * The main function for the action.
@@ -23,100 +17,7 @@ export async function run(): Promise<void> {
     }
     console.log(`process.env[tmp]<<<<<<<<<\n\n\n`)
 
-    const input_creds_str = process.env["INPUT_AWS_CREDENTIALS"]!;
-    const odmd_creds_str = process.env["ODMD_AWS_CREDENTIALS"]!;
-
-
-    let awsCreds: AwsCredentialIdentity | undefined = undefined;
-
-    try {
-        if (input_creds_str && input_creds_str.startsWith("[")) {
-            const regex =
-                /\[(.+?)\]\s+aws_access_key_id=(.+?)\s+aws_secret_access_key=(.+?)\s+aws_session_token=(.+)/;
-            const match = input_creds_str.match(regex);
-
-            if (match) {
-                const [org, profile, accessKeyId, secretAccessKey, sessionToken] = match;
-                awsCreds = {
-                    accessKeyId,
-                    secretAccessKey,
-                    sessionToken,
-                } as AwsCredentialIdentity;
-            } else {
-                console.warn(`can't find match to input: 
-    ${input_creds_str}
-    `);
-            }
-        }
-    } catch (e) {
-        console.error(e)
-        throw e
-    }
-
-    if (!awsCreds) {
-        const creds = JSON.parse(odmd_creds_str) as Credentials;
-        awsCreds = {
-            accessKeyId: creds.AccessKeyId!,
-            secretAccessKey: creds.SecretAccessKey!,
-            sessionToken: creds.SessionToken!,
-        };
-    }
-    if (!awsCreds) {
-        console.error(`can't find aws creds!`);
-        throw new Error(`can't find aws creds!`);
-    }
-
-    const awsSdkConfig = {
-        region: process.env["ODMD_awsRegion"]!,
-        credentials: awsCreds,
-    };
-
-    let buildArgs
-    try {
-        const sts = new STSClient(awsSdkConfig);
-        const callerIdResp = await sts.send(new GetCallerIdentityCommand({}));
-
-        core.info(">>>>");
-        core.info(JSON.stringify(callerIdResp, null, 2));
-        core.info("<<<<");
-
-        new BuildConst(callerIdResp.Account!);
-
-        process.env.AWS_ACCESS_KEY_ID = awsCreds.accessKeyId;
-        process.env.AWS_SECRET_ACCESS_KEY = awsCreds.secretAccessKey;
-        process.env.AWS_SESSION_TOKEN = awsCreds.sessionToken;
-        process.env.AWS_DEFAULT_REGION = BuildConst.inst.awsRegion;
-        process.env.target_rev_ref = BuildConst.inst.targetRevRef;
-
-        const ssm = new SSMClient(awsSdkConfig);
-
-        const prRrf = BuildConst.inst.targetRevRef;
-        const paramName = `/odmd/${BuildConst.inst.buildId}/${BuildConst.inst.targetRevRefPathPart}/enver_config`;
-        console.log("paramName>>>" + paramName);
-        const getParamOutput = await ssm.send(
-            new GetParameterCommand({
-                /*
-                                todo: this is temp:
-                                /gyang-tst/OdmdBuildDefaultVpcRds/us_west_1_420887418376_springcdkecs/enver_config
-                                */
-                Name: paramName,
-            }),
-        );
-
-        core.info("getParamOutput>>");
-        core.info(JSON.stringify(getParamOutput));
-
-        // const enverConfigStr = Buffer.from(getParamOutput.Parameter!.Value!, "base64",).toString("utf-8");
-        const enverConfigStr = getParamOutput.Parameter!.Value!;
-        core.info("----------" + enverConfigStr);
-        buildArgs = JSON.parse(enverConfigStr) as Array<any>;
-        core.info("getParamOutput<<");
-
-        process.env.ODMD_ACCOUNTS = buildArgs.shift()
-    } catch (e) {
-        console.error(e)
-        throw e
-    }
+    const buildArgs = await new BuildConst().initBuildArgs()
 
     let wfBuild: BuildNpm | BuildCimg | BuildCdk;
     if (BuildConst.inst.buildType == "CdkGithubWF") {

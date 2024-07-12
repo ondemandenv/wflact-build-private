@@ -75,7 +75,7 @@ export class BuildCdk extends BuildBase {
                 `--parameters odmdBuildId=${BuildConst.inst.buildId}`,
 
                 `--parameters buildSrcRev=${BuildConst.inst.githubSHA}`,
-                `--parameters buildSrcRef=${BuildConst.inst.targetRevRef}`,
+                `--parameters buildSrcRef=${BuildConst.inst.targetRevRefPathPart}`,
                 `--parameters buildSrcRepo=${BuildConst.inst.githubRepo}`
             ].join(' ')
             const args = [`deploy`, this.contextStrs.join() ?? "", clientStackName, rollBackStr, params, '--require-approval never']
