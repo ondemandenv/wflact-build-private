@@ -140,7 +140,7 @@ process.env.ODMD_SECRETS  = "{\n" +
 process.env.INPUT_AWS_CREDENTIALS = `[590184130740_AdministratorAccess]
 aws_access_key_id=ASIA
 aws_secret_access_key=fFskVUIbtY/spE
-aws_session_token=IQoL;
+aws_session_token=IQoL;`
 
 process.env.AWS_DEFAULT_REGION ='us-west-1'
 run();
