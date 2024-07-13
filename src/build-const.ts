@@ -22,7 +22,7 @@ export class BuildConst {
 
         const ghRefArr = process.env["GITHUB_REF"]!.split('/');
         // this._targetRevRef = (ghRefArr[1] == 'heads' ? 'b' : 't') + '..' + ghRefArr[2]
-        this._targetRevRefPathPart = (ghRefArr[1] == 'heads' ? 'b' : 't..') + ghRefArr[2]
+        this._targetRevRefPathPart = (ghRefArr[1] == 'heads' ? 'b..' : 't..') + ghRefArr[2]
         this._workflowName = process.env["GITHUB_WORKFLOW"]!;
         this._githubSHA = process.env["GITHUB_SHA"]!;
         this._githubRepo = process.env["GITHUB_REPOSITORY"]!;
@@ -158,20 +158,32 @@ export class BuildConst {
         process.env.AWS_ACCESS_KEY_ID = awsCreds.accessKeyId;
         process.env.AWS_SECRET_ACCESS_KEY = awsCreds.secretAccessKey;
         process.env.AWS_SESSION_TOKEN = awsCreds.sessionToken;
-        ;
         process.env.AWS_DEFAULT_REGION = process.env["ODMD_awsRegion"]!
 
 
         const localSsm = new SSMClient(localSdkConfig);
 
         try {
+            const getParamByPathCmdIpt = {Path: `/odmd/${BuildConst.inst.buildId}/*${this._targetRevRefPathPart}/enver_config`,};
+
+            console.log('JSON.stringify( getParamByPathCmdIpt)>>>')
+            console.log(JSON.stringify(getParamByPathCmdIpt))
+            console.log('JSON.stringify( getParamByPathCmdIpt)<<<')
+
             const getEnverConfigOut = await localSsm.send(
-                new GetParametersByPathCommand({Path: `/odmd/${BuildConst.inst.buildId}/*${this._targetRevRefPathPart}/enver_config`,}),
+                new GetParametersByPathCommand(getParamByPathCmdIpt),
             );
+            console.log('JSON.stringify( getEnverConfigOut)>>>')
+            console.log(JSON.stringify(getEnverConfigOut))
+            console.log('JSON.stringify( getEnverConfigOut)<<<')
 
-            return JSON.parse(getEnverConfigOut.Parameters!.find(p => p.Name!.endsWith(`${this._targetRevRefPathPart}/enver_config`))!.Value!)
+            let envConf = getEnverConfigOut.Parameters!.find(p => p.Name!.endsWith(`${this._targetRevRefPathPart}/enver_config`))!;
+            console.log('envConf>>>')
+            console.log(JSON.stringify(envConf))
+            console.log('envConf<<<')
+            return JSON.parse(envConf.Value!)
         } catch (e) {
-
+            console.error(e)
             const stsCentralRoleOut = await localSts.send(new AssumeRoleCommand({
                 RoleArn: `${this._buildId}-${localSdkConfig.region}${localBuildRoleId.Account!}-centerRole`,
                 RoleSessionName: process.env['GITHUB_RUN_ID']!
