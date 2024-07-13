@@ -170,6 +170,12 @@ export class BuildConst {
             );
 
             const envConf = getEnverConfigOut.Parameters!.find(p => p.Name!.endsWith(`${this._targetRevRefPathPart}/enver_config`))!;
+
+            /*
+            /odmd/odmd-contracts-cdk/b..odmdSbxUsw1/enver_config
+            */
+
+            process.env['target_rev_ref'] = envConf.Name!.split('/')[2]
             console.log('envConf>>>')
             console.log(JSON.stringify(envConf))
             console.log('envConf<<<')
