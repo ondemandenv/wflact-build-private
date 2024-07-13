@@ -164,20 +164,12 @@ export class BuildConst {
         const localSsm = new SSMClient(localSdkConfig);
 
         try {
-            const getParamByPathCmdIpt = {Path: `/odmd/${BuildConst.inst.buildId}/*${this._targetRevRefPathPart}/enver_config`,};
-
-            console.log('JSON.stringify( getParamByPathCmdIpt)>>>')
-            console.log(JSON.stringify(getParamByPathCmdIpt))
-            console.log('JSON.stringify( getParamByPathCmdIpt)<<<')
 
             const getEnverConfigOut = await localSsm.send(
-                new GetParametersByPathCommand(getParamByPathCmdIpt),
+                new GetParametersByPathCommand({Path: `/odmd/${BuildConst.inst.buildId}`, Recursive: true}),
             );
-            console.log('JSON.stringify( getEnverConfigOut)>>>')
-            console.log(JSON.stringify(getEnverConfigOut))
-            console.log('JSON.stringify( getEnverConfigOut)<<<')
 
-            let envConf = getEnverConfigOut.Parameters!.find(p => p.Name!.endsWith(`${this._targetRevRefPathPart}/enver_config`))!;
+            const envConf = getEnverConfigOut.Parameters!.find(p => p.Name!.endsWith(`${this._targetRevRefPathPart}/enver_config`))!;
             console.log('envConf>>>')
             console.log(JSON.stringify(envConf))
             console.log('envConf<<<')
