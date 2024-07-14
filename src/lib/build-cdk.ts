@@ -43,13 +43,13 @@ export class BuildCdk extends BuildBase {
         await this.exeCmd(`npm install -g aws-cdk@${this.cdkVer}`);
         await this.exeCmd(`npm install -g cross-env`);
 
-        console.warn( 'this.preCdkCmds:' + this.preCdkCmds.join( ', '))
+        await this.exeCmd(`npm install`);
 
+        console.warn( 'this.preCdkCmds:' + this.preCdkCmds.join( ', '))
         for (const preCdkCmd of this.preCdkCmds) {
             await this.exeCmd(preCdkCmd);
         }
 
-        await this.exeCmd(`npm install`);
         await this.exeCmd(`cdk ls`);
 
         const client = new CloudFormationClient({region: process.env.AWS_DEFAULT_REGION!});
