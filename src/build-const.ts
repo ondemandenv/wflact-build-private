@@ -166,13 +166,13 @@ export class BuildConst {
         try {
 
             const getEnverConfigOut = await localSsm.send(
-                new GetParametersByPathCommand({Path: `/odmd/${BuildConst.inst.buildId}`, Recursive: true}),
+                new GetParametersByPathCommand({Path: `/odmd-${BuildConst.inst.buildId}`, Recursive: true}),
             );
 
             const envConf = getEnverConfigOut.Parameters!.find(p => p.Name!.endsWith(`${this._targetRevRefPathPart}/enver_config`))!;
 
             /*
-            /odmd/odmd-contracts-cdk/b..odmdSbxUsw1/enver_config
+            /odmd-odmd-contracts-cdk/b..odmdSbxUsw1/enver_config
             */
 
             process.env.ODMD_ACCOUNTS = Buffer.from(JSON.stringify(secrets.odmdAcc)).toString('base64')
@@ -199,7 +199,7 @@ export class BuildConst {
                 } as AwsCredentialIdentity
             })
 
-            const dynaEnvers = await centerSsm.send(new GetParameterCommand({Name: `/odmd/envers/${this._buildId}`}))
+            const dynaEnvers = await centerSsm.send(new GetParameterCommand({Name: `/odmd-envers/${this._buildId}`}))
 
         }
 
