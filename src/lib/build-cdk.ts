@@ -8,18 +8,21 @@ import {BuildConst} from "../build-const";
 export class BuildCdk extends BuildBase {
     private readonly clientStackNames: string[];
     private readonly cdkVer: string;
+    private readonly preInstallCmds: string[];
     private readonly preCdkCmds: string[];
     private readonly contextStrs: string[];
 
     constructor(
         clientStackNames: string[],
         cdkVer: string,
+        preInstallCmds: string[],
         preCdkCmds: string[],
         ctxStr: string[],
     ) {
         super();
         this.clientStackNames = clientStackNames;
         this.cdkVer = cdkVer;
+        this.preInstallCmds = preInstallCmds
         this.preCdkCmds = preCdkCmds;
         this.contextStrs = ctxStr;
     }
@@ -40,12 +43,16 @@ export class BuildCdk extends BuildBase {
             }
         }
 
+        for (const preInstall of this.preInstallCmds) {
+            await this.exeCmd(preInstall)
+        }
+
         await this.exeCmd(`npm install -g aws-cdk@${this.cdkVer}`);
         await this.exeCmd(`npm install -g cross-env`);
 
         await this.exeCmd(`npm install`);
 
-        console.warn( 'this.preCdkCmds:' + this.preCdkCmds.join( ', '))
+        console.warn('this.preCdkCmds:' + this.preCdkCmds.join(', '))
         for (const preCdkCmd of this.preCdkCmds) {
             await this.exeCmd(preCdkCmd);
         }

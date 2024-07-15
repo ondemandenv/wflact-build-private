@@ -3,18 +3,15 @@ import {BuildConst} from "../build-const";
 
 export class BuildCimg extends BuildBase {
     private readonly buildCmds: string[];
-    private readonly imgNameToExtraTag: string[][];
     private readonly imgNameToRepoArn: { [p: string]: string };
 
     //lib/repo-build-pp-container-image-to-ecr-with-github-workflow.ts createRepobuildImplPerBranch
     constructor(
         buildCmds: string[],
-        imgNameToExtraTag: string[][],
         imgToRepoArns: { [p: string]: string },
     ) {
         super();
         this.buildCmds = buildCmds;
-        this.imgNameToExtraTag = imgNameToExtraTag;
         this.imgNameToRepoArn = imgToRepoArns;
     }
 
@@ -32,16 +29,12 @@ imgToRepoUri<<<`)
 
         console.log(`pushall>>>${pushAll}`)
 
-        for (const imgTg of this.imgNameToExtraTag) {
-            const builtIt = imgTg.shift()!;
+        for (const builtIt in this.imgNameToRepoArn) {
+            console.log(`builtIt: ${builtIt}`)
             // const imgName = builtIt.split(':')[0]
             await this.exeCmd(`docker tag ${builtIt} ${imgToRepoUri[builtIt]}:latest`)
             await this.exeCmd(`docker tag ${builtIt} ${imgToRepoUri[builtIt]}:${BuildConst.inst.githubSHA}`)
 
-            for (const tt of imgTg) {
-                if (tt.length > 2)
-                    await this.exeCmd(`docker tag ${builtIt} ${imgToRepoUri[builtIt]}:${tt}`)
-            }
         }
 
         const getEcrPassCmd = `aws ecr get-login-password --region ${BuildConst.inst.awsRegion}`;
@@ -70,7 +63,7 @@ imgToRepoUri<<<`)
             //975050243618
             const accountId = arnParts[4];
             //repository/spring-rds-img/cdk-spring-rds-appbodmdsbxusw1
-            const repositoryName = arnParts[5].substring( 'repository/'.length);
+            const repositoryName = arnParts[5].substring('repository/'.length);
 
             imgToRepoUri[imgName] = `${accountId}.dkr.ecr.${region}.amazonaws.com/${repositoryName}`;
             pushAll.push(`docker push --all-tags ${imgToRepoUri[imgName]}`)

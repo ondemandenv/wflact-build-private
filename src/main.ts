@@ -21,9 +21,9 @@ export async function run(): Promise<void> {
 
     let wfBuild: BuildNpm | BuildCimg | BuildCdk;
     if (BuildConst.inst.buildType == "CdkGithubWF") {
-        wfBuild = new BuildCdk(buildArgs[0], buildArgs[1], buildArgs[2], buildArgs[3]);
+        wfBuild = new BuildCdk(buildArgs[0], buildArgs[1], buildArgs[2], buildArgs[3], buildArgs[4]);
     } else if (BuildConst.inst.buildType == "ContainerImageEcr") {
-        wfBuild = new BuildCimg(buildArgs[0], buildArgs[1], buildArgs[2]);
+        wfBuild = new BuildCimg(buildArgs[0], buildArgs[1]);
     } else if (BuildConst.inst.buildType == "NpmPackGH") {
         wfBuild = new BuildNpm(buildArgs[0]);
     } else {
