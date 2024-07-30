@@ -30,9 +30,8 @@ export class BuildConst {
         if (BuildConst._inst) {
             throw new Error("singleton");
         }
-        BuildConst._inst = this;
         this._awsAccount = ''
-        // this._accounts = ''
+        BuildConst._inst = this;
     }
 
     private _buildId: string;
@@ -87,6 +86,7 @@ export class BuildConst {
     }
 
     async initBuildArgs() {
+        console.log("initBuildArgs>>>")
 
         const input_creds_str = process.env["INPUT_AWS_CREDENTIALS"]!;
 
@@ -113,6 +113,8 @@ export class BuildConst {
     
     `);
                 }
+            } else {
+                console.log("no input_creds_str found!")
             }
         } catch (e) {
             console.error(e)
@@ -125,6 +127,12 @@ export class BuildConst {
             odmdAcc: { central: string }
         };
 
+        console.log(`JSON.stringify(secrets.awsCred)>>>>>`)
+        console.log(secrets.awsCred)
+        console.log(`--------------------------`)
+        console.log(JSON.stringify(secrets.odmdAcc))
+        console.log(`JSON.stringify(secrets.awsCred)<<<<<<`)
+
         this._accounts = secrets.odmdAcc
 
         if (!awsCreds) {
@@ -132,12 +140,8 @@ export class BuildConst {
                 accessKeyId: secrets.awsCred.AccessKeyId!,
                 secretAccessKey: secrets.awsCred.SecretAccessKey!,
                 sessionToken: secrets.awsCred.SessionToken!,
-                expiration: secrets.awsCred.Expiration!,
+                // expiration: secrets.awsCred.Expiration, // TypeError: t.expiration.getTime is not a function
             };
-        }
-        if (!awsCreds) {
-            console.error(`can't find aws creds!`);
-            throw new Error(`can't find aws creds!`);
         }
 
         const localSdkConfig = {
@@ -146,6 +150,7 @@ export class BuildConst {
         };
 
         const localSts = new STSClient(localSdkConfig);
+
         const localBuildRoleId = await localSts.send(new GetCallerIdentityCommand({}));
 
         core.info(">>>>");
@@ -166,7 +171,7 @@ export class BuildConst {
         try {
 
             const getEnverConfigOut = await localSsm.send(
-                new GetParametersByPathCommand({Path: `/odmd-${BuildConst.inst.buildId}`, Recursive: true}),
+                new GetParametersByPathCommand({Path: `/odmd-${BuildConst.inst.buildId}/`, Recursive: true}),
             );
 
             const envConf = getEnverConfigOut.Parameters!.find(p => p.Name!.endsWith(`${this._targetRevRefPathPart}/enver_config`))!;
@@ -178,7 +183,7 @@ export class BuildConst {
             process.env.ODMD_ACCOUNTS = Buffer.from(JSON.stringify(secrets.odmdAcc)).toString('base64')
             process.env.target_rev_ref = envConf.Name!.split('/')[2]
 
-            console.log('envConf>>>')
+            console.log('envConf>>> JSON.stringify(secrets.odmdAcc): ' + JSON.stringify(secrets.odmdAcc))
             console.log(JSON.stringify(envConf))
             console.log('envConf<<<')
             return JSON.parse(envConf.Value!)
