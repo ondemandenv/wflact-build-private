@@ -182,6 +182,7 @@ export class BuildConst {
 
             process.env.ODMD_ACCOUNTS = Buffer.from(JSON.stringify(secrets.odmdAcc)).toString('base64')
             process.env.target_rev_ref = envConf.Name!.split('/')[2]
+            process.env.target_build_id = this._buildId
 
             console.log('envConf>>> JSON.stringify(secrets.odmdAcc): ' + JSON.stringify(secrets.odmdAcc))
             console.log(JSON.stringify(envConf))
