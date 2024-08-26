@@ -170,9 +170,15 @@ export class BuildConst {
 
         try {
 
+            //todo: this is workplace account !
             const getEnverConfigOut = await localSsm.send(
                 new GetParametersByPathCommand({Path: `/odmd-${BuildConst.inst.buildId}/`, Recursive: true}),
             );
+
+            console.log(`
+            BuildConst.inst: ${BuildConst.inst},
+            getEnverConfigOut: ${JSON.stringify(getEnverConfigOut, null, 2)},
+            `)
 
             const envConf = getEnverConfigOut.Parameters!.find(p => p.Name!.endsWith(`${this._targetRevRefPathPart}/enver_config`))!;
 
@@ -184,9 +190,6 @@ export class BuildConst {
             process.env.target_rev_ref = envConf.Name!.split('/')[2]
             process.env.target_build_id = this._buildId
 
-            console.log('envConf>>> JSON.stringify(secrets.odmdAcc): ' + JSON.stringify(secrets.odmdAcc))
-            console.log(JSON.stringify(envConf))
-            console.log('envConf<<<')
             return JSON.parse(envConf.Value!)
         } catch (e) {
             console.error(e)
