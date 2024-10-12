@@ -18,7 +18,7 @@
   "scripts": {
     "ci-test": "jest",
     "coverage": "make-coverage-badge --output-path ./badges/coverage.svg",
-    "package": "tsc --build --clean && tsc --build && ncc build src/index.ts && terser dist/index.js -c -m -o ../odmd-build/main.js",
+    "package": "tsc --build --clean && tsc --build && ncc build src/index.ts && terser dist/index.js -c -m -o ../wflact-resolvEnvars/main.js",
     "package:watch": "npm run package -- --watch",
     "test": "jest",
     "debug": "tsc --build --clean && tsc --build && ts-node src/debug-ContainerImageEcr.ts"
