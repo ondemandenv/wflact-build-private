@@ -77,6 +77,8 @@ export async function run(): Promise<void> {
         console.info(JSON.stringify(localBuildRoleId, null, 2));
         console.info("<<<<");
 
+        const awsAccount = localBuildRoleId.Account!
+
         const ghRefArr = process.env["GITHUB_REF"]!.split('/');
 
         const targetRevRefPathPart = (ghRefArr[1] == 'heads' ? 'b..' : 't..') + ghRefArr[2]
@@ -89,20 +91,25 @@ export async function run(): Promise<void> {
         )
         const obj = JSON.parse(getConfig.Parameter!.Value!)
 
-        obj.target_build_id = buildId
-        obj.target_rev_ref = targetRevRefPathPart
-
-        obj.AWS_ACCESS_KEY_ID = awsCreds.accessKeyId;
-        obj.AWS_SECRET_ACCESS_KEY = awsCreds.secretAccessKey;
-        obj.AWS_SESSION_TOKEN = awsCreds.sessionToken;
-        obj.AWS_REGION = awsRegion
-        obj.AWS_DEFAULT_REGION = awsRegion
-
-        for (const key in obj) {
-            const i = `echo "${key}=${obj[key]}" >> $GITHUB_ENV`;
+        for (let key in obj) {
+            if (!key.toLowerCase().startsWith('odmd_')) {
+                key = 'ODMD_' + key
+            }
+            const i = `echo "${key}=${obj[key]}" >> $GITHUB_ENV`
             const o = execSync(i).toString()
             console.info(`${i}\n${o}`)
         }
+
+        execSync(`echo "ODMD_build_id=${buildId}" >> $GITHUB_ENV`)
+        execSync(`echo "ODMD_rev_ref=${targetRevRefPathPart}" >> $GITHUB_ENV`)
+
+        execSync(`echo "AWS_ACCOUNT=${awsAccount}" >> $GITHUB_ENV`)
+        execSync(`echo "AWS_ACCESS_KEY_ID=${awsCreds.accessKeyId}" >> $GITHUB_ENV`)
+        execSync(`echo "AWS_SECRET_ACCESS_KEY=${awsCreds.secretAccessKey}" >> $GITHUB_ENV`)
+        execSync(`echo "AWS_SESSION_TOKEN=${awsCreds.sessionToken}" >> $GITHUB_ENV`)
+        execSync(`echo "AWS_REGION=${awsRegion}" >> $GITHUB_ENV`)
+        execSync(`echo "AWS_DEFAULT_REGION=${awsRegion}" >> $GITHUB_ENV`)
+
     } catch (e) {
         console.error(e as Error)
     }
