@@ -24,7 +24,7 @@
     "debug": "tsc --build --clean && tsc --build && ts-node src/debug-ContainerImageEcr.ts"
   },
   "dependencies": {
-    "@actions/core": "^1.10.1"
+    "@actions/core": "^1.11.1"
   },
   "devDependencies": {
     "@types/jest": "^29.5.12",
