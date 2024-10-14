@@ -1,26 +1,32 @@
 import fs from "fs";
 import * as process from "node:process";
 import {CloudFormationClient, DescribeStacksCommand} from "@aws-sdk/client-cloudformation";
-import {execSyncLog} from "./wflact-buildProduces";
+import {execSyncLog, genNpmRcCmds} from "./wflact-buildProduces";
 
 
 export async function wflactBuildDeployCDK(): Promise<void> {
 
+    const contractsLibBuildPkgOrg = process.env.ODMD_contractsLibPkgName!;
+
     const workdir = process.env.ODMD_work_dir!
-    const clientStackNames = process.env.ODMD_clientStackNames!.split(',')
+    const clientStackNames = process.env.ODMD_buildStackNames!.split(',')
 
     const pkgDeps: { [k: string]: string } = {}
     const pkgJsn = JSON.parse(fs.readFileSync(workdir + '/package.json', 'utf-8'));
     for (const k in pkgJsn.devDependencies) {
-        if (k.startsWith("@ondemandenv/")) {
+        if (k.startsWith(contractsLibBuildPkgOrg)) {
             pkgDeps[k] = pkgJsn.devDependencies[k]
         }
     }
     for (const k in pkgJsn.dependencies) {
-        if (k.startsWith("@ondemandenv/")) {
+        if (k.startsWith(contractsLibBuildPkgOrg)) {
             pkgDeps[k] = pkgJsn.dependencies[k]
         }
     }
+
+    genNpmRcCmds(contractsLibBuildPkgOrg).forEach(c => {
+        execSyncLog(c)
+    })
 
     execSyncLog(`npm install -g aws-cdk@$ODMD_CDK_CLI_VERSION`);
     execSyncLog(`npm install -g cross-env`);

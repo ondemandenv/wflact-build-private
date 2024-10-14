@@ -86,18 +86,17 @@ export async function run(): Promise<void> {
         const localSsm = new SSMClient();
 
         //todo: this is workplace account !
+        let Name = `/odmd-${buildId}/${targetRevRefPathPart}/enver_config`;
+        console.info(`Name>>${Name}`)
         const getConfig = await localSsm.send(
-            new GetParameterCommand({Name: `/odmd-${buildId}/${targetRevRefPathPart}/enver_config`}),
+            new GetParameterCommand({Name}),
         )
         const obj = JSON.parse(getConfig.Parameter!.Value!)
 
-        for (let key in obj) {
-            if (!key.toLowerCase().startsWith('odmd_')) {
-                key = 'ODMD_' + key
-            }
-            const i = `echo "${key}=${obj[key]}" >> $GITHUB_ENV`
-            const o = execSync(i).toString()
-            console.info(`${i}\n${o}`)
+        for (const key in obj) {
+            const lk = key.toLowerCase();
+            const kk = (!lk.startsWith('odmd_') && !lk.startsWith('aws_')) ? 'ODMD_' + key : key
+            execSync(`echo '${kk}=${obj[key]}' >> $GITHUB_ENV`)
         }
 
         execSync(`echo "ODMD_build_id=${buildId}" >> $GITHUB_ENV`)

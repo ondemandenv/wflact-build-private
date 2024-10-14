@@ -3,7 +3,7 @@ import {execSyncLog} from "./wflact-buildProduces";
 
 export async function wflactBuildCtnImg(): Promise<void> {
 
-    const imgNameToRepoArn = JSON.parse(process.env.imgNameToRepoArn!) as { [p: string]: string }
+    const imgNameToRepoArn = JSON.parse(process.env.ODMD_imgToRepoArns!) as { [p: string]: string }
 
     const imgToRepoUri = {} as { [imgName: string]: string }
     const pushAll = []
