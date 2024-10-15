@@ -14,11 +14,10 @@ export async function wflactBuildContractsLib(): Promise<void> {
 
     const arr = [
         `PKG_NAME=$(jq -r '.name' package.json) && test "$PKG_NAME" != "${contractsLibPkgName}" || echo $PKG_NAME is good`,
-        `npm install`,
-        `npm run test`,
+
         `npm publish`,
-        `git config user.name "$[bot]"`,
-        `git config user.email "$@ondemandenv.dev"`,
+        `git config user.name "odmd_wfl"`,
+        `git config user.email "odmd_wfl$@ondemandenv.dev"`,
 
 
         `PKG_VER=$(jq -r '.version' package.json)
