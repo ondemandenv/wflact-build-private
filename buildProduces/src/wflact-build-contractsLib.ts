@@ -15,7 +15,7 @@ export async function wflactBuildContractsLib(): Promise<void> {
     const arr = [
         `PKG_NAME=$(jq -r '.name' package.json) && test "$PKG_NAME" != "${contractsLibPkgName}" || echo $PKG_NAME is good`,
 
-        `npm publish`,
+        `tsc --build --clean && tsc --build && npm publish`,
         `git config user.name "odmd_wfl"`,
         `git config user.email "odmd_wfl$@ondemandenv.dev"`,
 
