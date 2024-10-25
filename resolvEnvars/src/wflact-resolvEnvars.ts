@@ -91,6 +91,7 @@ export async function run(): Promise<void> {
         const getConfig = await localSsm.send(
             new GetParameterCommand({Name}),
         )
+        console.info(`Rsp>>${JSON.stringify(getConfig)}`)
         const obj = JSON.parse(getConfig.Parameter!.Value!)
 
         for (const key in obj) {

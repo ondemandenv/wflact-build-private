@@ -26,7 +26,7 @@ export async function wflactBuildContractsLib(): Promise<void> {
  export AWS_ACCESS_KEY_ID=$(echo $assume_role_output | jq -r '.Credentials.AccessKeyId')
  export AWS_SECRET_ACCESS_KEY=$(echo $assume_role_output | jq -r '.Credentials.SecretAccessKey')
  export AWS_SESSION_TOKEN=$(echo $assume_role_output | jq -r '.Credentials.SessionToken')
- aws ssm put-parameter --name ${contractsLibLatestPath} --type String --value "$GITHUB_SHA\n${contractsLibPkgName}:$PKG_VER" --overwrite
+ aws ssm put-parameter --name ${contractsLibLatestPath} --type String --value "$GITHUB_SHA,${contractsLibPkgName},$PKG_VER" --overwrite
  npm dist-tag add ${contractsLibPkgName}@$PKG_VER $GITHUB_SHA --registry=https://npm.pkg.github.com`,
     ]
 
