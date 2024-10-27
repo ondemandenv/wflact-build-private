@@ -4,6 +4,11 @@ import {AwsCredentialIdentity} from "@smithy/types";
 import {Credentials, GetCallerIdentityCommand, STSClient} from "@aws-sdk/client-sts";
 import {GetParameterCommand, SSMClient} from "@aws-sdk/client-ssm";
 
+
+export function execSyncLog(cmd: string) {
+    execSync(cmd, {cwd: process.env.ODMD_work_dir, stdio: "inherit"});
+}
+
 /**
  * The main function for the action.
  * @returns {Promise<void>} Resolves when the action is complete.
@@ -11,7 +16,7 @@ import {GetParameterCommand, SSMClient} from "@aws-sdk/client-ssm";
 export async function run(): Promise<void> {
 
     const input_creds_str = process.env["INPUT_AWS_CREDENTIALS"]!;
-    const input_envar_stackName = process.env["INPUT_envar_stackName"]!;
+    const input_envar_stackName = process.env["INPUT_ENVAR_STACKNAME"]!; // ALWAYS UPPER CASE!
 
     let awsCreds: AwsCredentialIdentity | undefined = undefined;
 
@@ -86,7 +91,9 @@ export async function run(): Promise<void> {
 
         const prev = ['buildSrcRepo', 'CfnVersion', 'BuildUrl', 'ByPipeline', 'odmdBuildId', 'odmdDepRev', 'buildSrcRev', 'buildSrcRef'].map(p => `ParameterKey=${p},UsePreviousValue=true`).join(' ')
 
-        execSync(`aws cloudformation update-stack --stack-name ${input_envar_stackName} --use-previous-template --parameters ${prev} ParameterKey=ContractsShareInNow,ParameterValue=${new Date().getTime()}`)
+        execSyncLog(`aws cloudformation update-stack --stack-name ${
+            input_envar_stackName} --use-previous-template --parameters ${prev} ParameterKey=ContractsShareInNow,ParameterValue=${
+            new Date().getTime()}`)
 
         const localSsm = new SSMClient();
 
@@ -102,18 +109,18 @@ export async function run(): Promise<void> {
         for (const key in obj) {
             const lk = key.toLowerCase();
             const kk = (!lk.startsWith('odmd_') && !lk.startsWith('aws_')) ? 'ODMD_' + key : key
-            execSync(`echo '${kk}=${obj[key]}' >> $GITHUB_ENV`)
+            execSyncLog(`echo '${kk}=${obj[key]}' >> $GITHUB_ENV`)
         }
 
-        execSync(`echo "ODMD_build_id=${buildId}" >> $GITHUB_ENV`)
-        execSync(`echo "ODMD_rev_ref=${targetRevRefPathPart}" >> $GITHUB_ENV`)
+        execSyncLog(`echo "ODMD_build_id=${buildId}" >> $GITHUB_ENV`)
+        execSyncLog(`echo "ODMD_rev_ref=${targetRevRefPathPart}" >> $GITHUB_ENV`)
 
-        execSync(`echo "AWS_ACCOUNT=${awsAccount}" >> $GITHUB_ENV`)
-        execSync(`echo "AWS_ACCESS_KEY_ID=${awsCreds.accessKeyId}" >> $GITHUB_ENV`)
-        execSync(`echo "AWS_SECRET_ACCESS_KEY=${awsCreds.secretAccessKey}" >> $GITHUB_ENV`)
-        execSync(`echo "AWS_SESSION_TOKEN=${awsCreds.sessionToken}" >> $GITHUB_ENV`)
-        execSync(`echo "AWS_REGION=${awsRegion}" >> $GITHUB_ENV`)
-        execSync(`echo "AWS_DEFAULT_REGION=${awsRegion}" >> $GITHUB_ENV`)
+        execSyncLog(`echo "AWS_ACCOUNT=${awsAccount}" >> $GITHUB_ENV`)
+        execSyncLog(`echo "AWS_ACCESS_KEY_ID=${awsCreds.accessKeyId}" >> $GITHUB_ENV`)
+        execSyncLog(`echo "AWS_SECRET_ACCESS_KEY=${awsCreds.secretAccessKey}" >> $GITHUB_ENV`)
+        execSyncLog(`echo "AWS_SESSION_TOKEN=${awsCreds.sessionToken}" >> $GITHUB_ENV`)
+        execSyncLog(`echo "AWS_REGION=${awsRegion}" >> $GITHUB_ENV`)
+        execSyncLog(`echo "AWS_DEFAULT_REGION=${awsRegion}" >> $GITHUB_ENV`)
 
     } catch (e) {
         console.error(e as Error)
