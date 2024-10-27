@@ -11,6 +11,7 @@ import {GetParameterCommand, SSMClient} from "@aws-sdk/client-ssm";
 export async function run(): Promise<void> {
 
     const input_creds_str = process.env["INPUT_AWS_CREDENTIALS"]!;
+    const input_envar_stackName = process.env["INPUT_envar_stackName"]!;
 
     let awsCreds: AwsCredentialIdentity | undefined = undefined;
 
@@ -81,7 +82,11 @@ export async function run(): Promise<void> {
 
         const ghRefArr = process.env["GITHUB_REF"]!.split('/');
 
-        const targetRevRefPathPart = (ghRefArr[1] == 'heads' ? 'b..' : 't..') + ghRefArr[2]
+        const targetRevRefPathPart = (ghRefArr[1] == 'heads' ? 'b..' : 't..') + ghRefArr[2];
+
+        const prev = ['buildSrcRepo', 'CfnVersion', 'BuildUrl', 'ByPipeline', 'odmdBuildId', 'odmdDepRev', 'buildSrcRev', 'buildSrcRef'].map(p => `ParameterKey=${p},UsePreviousValue=true`).join(' ')
+
+        execSync(`aws cloudformation update-stack --stack-name ${input_envar_stackName} --use-previous-template --parameters ${prev} ParameterKey=ContractsShareInNow,ParameterValue=${new Date().getTime()}`)
 
         const localSsm = new SSMClient();
 
