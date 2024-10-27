@@ -89,9 +89,8 @@ export async function run(): Promise<void> {
 
         const targetRevRefPathPart = (ghRefArr[1] == 'heads' ? 'b..' : 't..') + ghRefArr[2];
 
-
         const envarStack = process.env["INPUT_ENVAR_STACKNAME"]; // ALWAYS UPPER CASE!
-        if (envarStack && envarStack.length > 3) {
+        if (envarStack && envarStack.includes(buildId)) {// will be string 'undefined' in github action ! fk github
 
             /*
     https://awscli.amazonaws.com/v2/documentation/api/2.1.29/reference/cloudformation/update-stack.html
@@ -100,12 +99,19 @@ export async function run(): Promise<void> {
     --parameters ParameterKey=KeyPairName,UsePreviousValue=true ParameterKey=SubnetIDs,ParameterValue=SampleSubnetID1
 
             * */
-            execSyncLog(`aws cloudformation update-stack --stack-name ${
-                envarStack} --use-previous-template --parameters ${
-                ['buildSrcRepo', 'CfnVersion', 'BuildUrl', 'ByPipeline', 'odmdBuildId', 'odmdDepRev', 'buildSrcRev', 'buildSrcRef']
-                    .map(p => `ParameterKey=${p},UsePreviousValue=true`)
-                    .join(' ')} ParameterKey=ContractsShareInNow,ParameterValue=${
-                new Date().getTime()} && aws cloudformation wait stack-update-complete --stack-name ${envarStack}`)
+
+            try {
+                execSyncLog(`aws cloudformation update-stack --stack-name ${
+                    envarStack} --use-previous-template --parameters ${
+                    ['buildSrcRepo', 'CfnVersion', 'BuildUrl', 'ByPipeline', 'odmdBuildId', 'odmdDepRev', 'buildSrcRev', 'buildSrcRef']
+                        .map(p => `ParameterKey=${p},UsePreviousValue=true`)
+                        .join(' ')} ParameterKey=ContractsShareInNow,ParameterValue=${
+                    new Date().getTime()} `)
+            } catch (e) {
+                //is in UPDATE_IN_PROGRESS state and can not be updated.
+                console.error(e)
+            }
+            execSyncLog(`aws cloudformation wait stack-update-complete --stack-name ${envarStack}`)
         }
 
         const localSsm = new SSMClient();
