@@ -16,8 +16,7 @@ export function execSyncLog(cmd: string) {
  */
 export async function run(): Promise<void> {
 
-    const input_creds_str = process.env["INPUT_AWS_CREDENTIALS"]!;
-    const input_envar_stackName = process.env["INPUT_ENVAR_STACKNAME"]!; // ALWAYS UPPER CASE!
+    const input_creds_str = process.env["INPUT_AWS_CREDENTIALS"]!;// input_ always all upper case
 
     let awsCreds: AwsCredentialIdentity | undefined = undefined;
 
@@ -90,11 +89,16 @@ export async function run(): Promise<void> {
 
         const targetRevRefPathPart = (ghRefArr[1] == 'heads' ? 'b..' : 't..') + ghRefArr[2];
 
-        const prev = ['buildSrcRepo', 'CfnVersion', 'BuildUrl', 'ByPipeline', 'odmdBuildId', 'odmdDepRev', 'buildSrcRev', 'buildSrcRef'].map(p => `ParameterKey=${p},UsePreviousValue=true`).join(' ')
 
-        execSyncLog(`aws cloudformation update-stack --stack-name ${
-            input_envar_stackName} --use-previous-template --parameters ${prev} ParameterKey=ContractsShareInNow,ParameterValue=${
-            new Date().getTime()} && aws cloudformation wait stack-update-complete --stack-name ${input_envar_stackName}`)
+        const envarStack = process.env["INPUT_ENVAR_STACKNAME"]; // ALWAYS UPPER CASE!
+        if (envarStack && envarStack.length > 3) {
+            execSyncLog(`aws cloudformation update-stack --stack-name ${
+                envarStack} --use-previous-template --parameters ${
+                ['buildSrcRepo', 'CfnVersion', 'BuildUrl', 'ByPipeline', 'odmdBuildId', 'odmdDepRev', 'buildSrcRev', 'buildSrcRef']
+                    .map(p => `ParameterKey=${p},UsePreviousValue=true`)
+                    .join(' ')} ParameterKey=ContractsShareInNow,ParameterValue=${
+                new Date().getTime()} && aws cloudformation wait stack-update-complete --stack-name ${envarStack}`)
+        }
 
         const localSsm = new SSMClient();
 
