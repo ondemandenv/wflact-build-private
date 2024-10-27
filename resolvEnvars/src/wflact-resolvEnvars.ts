@@ -92,6 +92,14 @@ export async function run(): Promise<void> {
 
         const envarStack = process.env["INPUT_ENVAR_STACKNAME"]; // ALWAYS UPPER CASE!
         if (envarStack && envarStack.length > 3) {
+
+            /*
+    https://awscli.amazonaws.com/v2/documentation/api/2.1.29/reference/cloudformation/update-stack.html
+
+    aws cloudformation update-stack --stack-name mystack --use-previous-template \
+    --parameters ParameterKey=KeyPairName,UsePreviousValue=true ParameterKey=SubnetIDs,ParameterValue=SampleSubnetID1
+
+            * */
             execSyncLog(`aws cloudformation update-stack --stack-name ${
                 envarStack} --use-previous-template --parameters ${
                 ['buildSrcRepo', 'CfnVersion', 'BuildUrl', 'ByPipeline', 'odmdBuildId', 'odmdDepRev', 'buildSrcRev', 'buildSrcRef']
