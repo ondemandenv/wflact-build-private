@@ -94,7 +94,7 @@ export async function run(): Promise<void> {
 
         execSyncLog(`aws cloudformation update-stack --stack-name ${
             input_envar_stackName} --use-previous-template --parameters ${prev} ParameterKey=ContractsShareInNow,ParameterValue=${
-            new Date().getTime()}`)
+            new Date().getTime()} && aws cloudformation wait stack-update-complete --stack-name ${input_envar_stackName}`)
 
         const localSsm = new SSMClient();
 
