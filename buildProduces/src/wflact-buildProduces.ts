@@ -37,4 +37,6 @@ export async function run(): Promise<void> {
         return await wflactBuildDeployCDK()
     }
 
+    console.warn( "No resType Found" )
+
 }

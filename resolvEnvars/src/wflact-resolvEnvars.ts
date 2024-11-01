@@ -6,7 +6,6 @@ import {GetParameterCommand, SSMClient} from "@aws-sdk/client-ssm";
 
 
 export function execSyncLog(cmd: string) {
-    console.log(`exec: ${cmd}`);
     execSync(cmd, {cwd: process.env.ODMD_work_dir, stdio: "inherit"});
 }
 
