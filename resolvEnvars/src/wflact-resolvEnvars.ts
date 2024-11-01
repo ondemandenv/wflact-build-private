@@ -48,13 +48,11 @@ export async function run(): Promise<void> {
         throw e
     }
 
-
-    const secrets = JSON.parse(process.env["ODMD_SECRETS"]!) as {
-        awsCred: Credentials,
-        odmdAcc: { central: string }
-    };
-
     if (!awsCreds) {
+        const secrets = JSON.parse(process.env["ODMD_SECRETS"]!) as {
+            awsCred: Credentials,
+            odmdAcc: { central: string }
+        };
         awsCreds = {
             accessKeyId: secrets.awsCred.AccessKeyId!,
             secretAccessKey: secrets.awsCred.SecretAccessKey!,
@@ -87,9 +85,25 @@ export async function run(): Promise<void> {
 
         const ghRefArr = process.env["GITHUB_REF"]!.split('/');
 
-        const targetRevRefPathPart = (ghRefArr[1] == 'heads' ? 'b..' : 't..') + ghRefArr[2];
+        //D:\odmd\ONDEMAND_CENTRAL_REPO\src\lib\repo-build-pp-base.ts
+        /*
+parameterName: `/odmd-${enver.owner.buildId}/${enver.targetRevision.type + '..' + enver.targetRevision.value}/enver_config`,
+        */
+        const targetRevTypeVal = (ghRefArr[1] == 'heads' ? 'b..' : 't..') + ghRefArr[2];
 
-        const envarStack = process.env["INPUT_ENVAR_STACKNAME"]; // ALWAYS UPPER CASE!
+
+        const localSsm = new SSMClient();
+
+        //todo: this is workplace account !
+        const Name = `/odmd-${buildId}/${targetRevTypeVal}/enver_config`;
+        console.info(`enver config: Name>>${Name}`)
+        const getConfig = await localSsm.send(
+            new GetParameterCommand({Name}),
+        )
+        console.info(`Rsp>>${JSON.stringify(getConfig)}`)
+        const obj = JSON.parse(getConfig.Parameter!.Value!)
+
+        const envarStack = obj['ghWflPpStackName'] as string
         if (envarStack && envarStack.includes(buildId)) {// will be string 'undefined' in github action ! fk github
 
             /*
@@ -114,17 +128,6 @@ export async function run(): Promise<void> {
             execSyncLog(`aws cloudformation wait stack-update-complete --stack-name ${envarStack}`)
         }
 
-        const localSsm = new SSMClient();
-
-        //todo: this is workplace account !
-        let Name = `/odmd-${buildId}/${targetRevRefPathPart}/enver_config`;
-        console.info(`Name>>${Name}`)
-        const getConfig = await localSsm.send(
-            new GetParameterCommand({Name}),
-        )
-        console.info(`Rsp>>${JSON.stringify(getConfig)}`)
-        const obj = JSON.parse(getConfig.Parameter!.Value!)
-
         for (const key in obj) {
             const lk = key.toLowerCase();
             const kk = (!lk.startsWith('odmd_') && !lk.startsWith('aws_')) ? 'ODMD_' + key : key
@@ -132,7 +135,7 @@ export async function run(): Promise<void> {
         }
 
         execSyncLog(`echo "ODMD_build_id=${buildId}" >> $GITHUB_ENV`)
-        execSyncLog(`echo "ODMD_rev_ref=${targetRevRefPathPart}" >> $GITHUB_ENV`)
+        execSyncLog(`echo "ODMD_rev_ref=${targetRevTypeVal}" >> $GITHUB_ENV`)
 
         execSyncLog(`echo "AWS_ACCOUNT=${awsAccount}" >> $GITHUB_ENV`)
         execSyncLog(`echo "AWS_ACCESS_KEY_ID=${awsCreds.accessKeyId}" >> $GITHUB_ENV`)
