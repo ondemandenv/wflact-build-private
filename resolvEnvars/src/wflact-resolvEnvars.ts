@@ -100,9 +100,9 @@ parameterName: `/odmd-${enver.owner.buildId}/${enver.targetRevision.type + '..' 
             new GetParameterCommand({Name}),
         )
         console.info(`Rsp>>${JSON.stringify(getConfig)}`)
-        const obj = JSON.parse(getConfig.Parameter!.Value!)
+        const enverConfigObj = JSON.parse(getConfig.Parameter!.Value!)
 
-        const envarStack = obj['ghWflPpStackName'] as string
+        const envarStack = enverConfigObj['ghWflPpStackName'] as string
         if (envarStack && envarStack.includes(buildId)) {// will be string 'undefined' in github action ! fk github
 
             /*
@@ -127,14 +127,13 @@ parameterName: `/odmd-${enver.owner.buildId}/${enver.targetRevision.type + '..' 
             execSyncLog(`aws cloudformation wait stack-update-complete --stack-name ${envarStack}`)
         }
 
-        for (const key in obj) {
+        for (const key in enverConfigObj) {
             const lk = key.toLowerCase();
             const kk = (!lk.startsWith('odmd_') && !lk.startsWith('aws_')) ? 'ODMD_' + key : key
-            execSyncLog(`echo '${kk}=${obj[key]}' >> $GITHUB_ENV`)
+            execSyncLog(`echo '${kk}=${enverConfigObj[key]}' >> $GITHUB_ENV`)
         }
 
         execSyncLog(`echo "ODMD_build_id=${buildId}" >> $GITHUB_ENV`)
-        execSyncLog(`echo "ODMD_rev_ref=${targetRevTypeVal}" >> $GITHUB_ENV`)
 
         execSyncLog(`echo "AWS_ACCOUNT=${awsAccount}" >> $GITHUB_ENV`)
         execSyncLog(`echo "AWS_ACCESS_KEY_ID=${awsCreds.accessKeyId}" >> $GITHUB_ENV`)
