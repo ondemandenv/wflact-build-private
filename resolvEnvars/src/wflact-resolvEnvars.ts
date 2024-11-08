@@ -95,11 +95,11 @@ parameterName: `/odmd-${enver.owner.buildId}/${enver.targetRevision.type + '..' 
 
         //todo: this is workplace account !
         const Name = `/odmd-${buildId}/${targetRevTypeVal}/enver_config`;
-        console.info(`enver config: Name>>${Name}`)
+        console.info(`enver config: Param Name>>${Name}`)
         const getConfig = await localSsm.send(
             new GetParameterCommand({Name}),
         )
-        console.info(`Rsp>>${JSON.stringify(getConfig)}`)
+        console.info(`Param Rsp>>${JSON.stringify(getConfig)}`)
         const enverConfigObj = JSON.parse(getConfig.Parameter!.Value!)
 
         const envarStack = enverConfigObj['ghWflPpStackName'] as string

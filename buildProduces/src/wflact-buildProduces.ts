@@ -37,6 +37,21 @@ export async function run(): Promise<void> {
         return await wflactBuildDeployCDK()
     }
 
-    console.warn( "No resType Found" )
+    execSyncLog(`
+ assume_role_output=$(aws sts assume-role --role-arn $ODMD_centralRoleArn --role-session-name contracts_pkg) 
+ export AWS_ACCESS_KEY_ID=$(echo $assume_role_output | jq -r '.Credentials.AccessKeyId')
+ export AWS_SECRET_ACCESS_KEY=$(echo $assume_role_output | jq -r '.Credentials.SecretAccessKey')
+ export AWS_SESSION_TOKEN=$(echo $assume_role_output | jq -r '.Credentials.SessionToken')
+ aws sts get-caller-identity`
+    )
+/* D:\odmd\ONDEMAND_CENTRAL_REPO\src\lib\repo-build-pp-cmds-with-github-workflow.ts#ODMD__productions
+    execSyncLog(`
+ aws ssm put-parameter --name ?? --type String --value "???" --overwrite
+    `)
+*/
+    console.warn("No resType Found>>>")
+    execSyncLog('pwd')
+    execSyncLog('env')
+    console.warn("No resType Found<<<")
 
 }
