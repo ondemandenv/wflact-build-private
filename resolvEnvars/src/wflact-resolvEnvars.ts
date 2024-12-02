@@ -102,6 +102,14 @@ parameterName: `/odmd-${enver.owner.buildId}/${enver.targetRevision.type + '..' 
         console.info(`Param Rsp>>${JSON.stringify(getConfig)}`)
         const enverConfigObj = JSON.parse(getConfig.Parameter!.Value!)
 
+        /**
+         *
+         *             ghWflPpStackName: (this.getCsResType() != 'Custom::CdkGithubWF'// will directly thru contracts lib
+         *                 && this.getCsResType() != 'Custom::ContainerImageEcr'// no dependencies except src sha
+         *                 && this.enver.owner != this.enver.owner.contracts.contractsLibBuild // no dependencies except src sha
+         *             ) ? this.stackName : undefined //used in D:\odmd\wflact-build-private\resolvEnvars\src\wflact-resolvEnvars.ts
+         *
+         */
         const envarStack = enverConfigObj['ghWflPpStackName'] as string
         if (envarStack && envarStack.includes(buildId)) {// will be string 'undefined' in github action ! fk github
 

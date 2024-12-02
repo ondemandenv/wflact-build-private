@@ -1,5 +1,5 @@
 import * as process from "node:process";
-import {execSyncLog} from "./wflact-buildProduces";
+import {execSyncLog} from "./wflactBuildProducing";
 
 export async function wflactBuildCtnImg(): Promise<void> {
 

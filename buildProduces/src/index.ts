@@ -1,4 +1,4 @@
 
-import { run } from "./wflact-buildProduces";
+import { run } from "./wflactBuildProducing";
 
 run();

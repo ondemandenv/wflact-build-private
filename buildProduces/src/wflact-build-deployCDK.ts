@@ -1,7 +1,7 @@
 import fs from "fs";
 import * as process from "node:process";
 import {CloudFormationClient, DescribeStacksCommand} from "@aws-sdk/client-cloudformation";
-import {execSyncLog, genNpmRcCmds} from "./wflact-buildProduces";
+import {execSyncLog, genNpmRcCmds} from "./wflactBuildProducing";
 
 
 export async function wflactBuildDeployCDK(): Promise<void> {
