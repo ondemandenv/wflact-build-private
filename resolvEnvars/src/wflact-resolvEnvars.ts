@@ -100,6 +100,7 @@ parameterName: `/odmd-${enver.owner.buildId}/${enver.targetRevision.type + '..' 
             new GetParameterCommand({Name}),
         )
         console.info(`Param Rsp>>${JSON.stringify(getConfig)}`)
+        console.info(`Param val>>${JSON.stringify(getConfig.Parameter!.Value!)}`)
         const enverConfigObj = JSON.parse(getConfig.Parameter!.Value!)
 
         /**

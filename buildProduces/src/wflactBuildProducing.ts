@@ -45,6 +45,10 @@ export async function run(): Promise<void> {
         console.info('exit when no producingStr: ' + producingStr)
     }
 
+    if (process.env.ODMD_build_id == process.env.ODMD_contractsLibBuild) {
+        return await wflactBuildContractsLib()
+    }
+
     //D:\odmd\ONDEMAND_CENTRAL_REPO\src\lib\repo-build-pp-cmds-with-github-workflow.ts
     const producerIdToPath = JSON.parse(producingStr!) as { [k: string]: string }
 
@@ -52,7 +56,7 @@ export async function run(): Promise<void> {
     for (const producerId in producerIdToPath) {
         const path = producerIdToPath[producerId]
         const producingVal = fs.readFileSync(`${process.env.RUNNER_TEMP}/${producerId}.txt`, 'utf8')
-        arr.push(`aws ssm put-parameter --name ${path} --type String --value "${producingVal}" --overwrite`)
+        arr.push(`aws ssm put-parameter --name ${path} --type String --value "${producingVal.trim()}" --overwrite`)
     }
 
     execSyncLog(`
@@ -64,10 +68,5 @@ aws sts get-caller-identity
 ${arr.join('\n')}
 `
     )
-
-    if (process.env.ODMD_build_id == process.env.ODMD_contractsLibBuild) {
-        console.log('calling wflactBuildContractsLib ...')
-        // return await wflactBuildContractsLib()
-    }
 
 }
