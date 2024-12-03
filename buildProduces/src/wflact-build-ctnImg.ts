@@ -1,11 +1,11 @@
 import * as process from "node:process";
 import {execSyncLog} from "./wflactBuildProducing";
+import {execSync} from "child_process";
 
 export async function wflactBuildCtnImg(): Promise<void> {
 
     const imgNameToRepoArn = JSON.parse(process.env.ODMD_imgToRepoArns!) as { [p: string]: string }
 
-    const imgToRepoUri = {} as { [imgName: string]: string }
     const pushAll = []
     for (const imgName in imgNameToRepoArn) {
         //arn:aws:ecr:us-west-1:975050243618:repository/spring-rds-img/cdk-spring-rds-appbodmdsbxusw1
@@ -19,24 +19,28 @@ export async function wflactBuildCtnImg(): Promise<void> {
         //975050243618
         const accountId = arnParts[4];
         //repository/spring-rds-img/cdk-spring-rds-appbodmdsbxusw1
-        const repositoryName = arnParts[5].substring('repository/'.length);
+        const repoName = arnParts[5].substring('repository/'.length);
 
-        imgToRepoUri[imgName] = `${accountId}.dkr.ecr.${region}.amazonaws.com/${repositoryName}`;
-        pushAll.push(`docker push --all-tags ${imgToRepoUri[imgName]}`)
-    }
+        const repoUrl = `${accountId}.dkr.ecr.${region}.amazonaws.com/${repoName}`;
+        pushAll.push(`docker push --all-tags ${repoUrl}`)
+        /*
+aws ecr describe-images --repository-name samplespringopenapi3img/bmaster/open3 --image-ids imageTag=latest --query 'imageDetails[].imageTags[]'
+[
+    "latest",
+    "766f48744a972e95aa7b0b89e82779622f3f4b0a"
+]*/
+        let tagsArr: string[] = []
+        try {
+            tagsArr = JSON.parse(execSync(`aws ecr describe-images --repository-name ${repoName} --image-ids imageTag=latest --query 'imageDetails[].imageTags[]' --output json`).toString()) as string[]
+        } catch (e) {
+        }
+        if (tagsArr.length > 50) {
+            throw new Error('too many tags for one image ' + repoName + '/' + imgName)
+        }
 
-
-    console.log(`imgToRepoUri>>>
-        ${JSON.stringify(imgToRepoUri)}
-imgToRepoUri<<<`)
-
-    console.log(`pushall>>>${pushAll}`)
-
-    for (const builtIt in imgNameToRepoArn) {
-        console.log(`builtIt: ${builtIt}`)
-        // const imgName = builtIt.split(':')[0]
-        execSyncLog(`docker tag ${builtIt} ${imgToRepoUri[builtIt]}:latest`)
-        execSyncLog(`docker tag ${builtIt} ${imgToRepoUri[builtIt]}:$GITHUB_SHA`)
+        // const imgName = imgName.split(':')[0]
+        execSyncLog(`docker tag ${imgName} ${repoUrl}:latest`)
+        execSyncLog(`docker tag ${imgName} ${repoUrl}:$GITHUB_SHA`)
     }
 
     const awsAccount = process.env.AWS_ACCOUNT!

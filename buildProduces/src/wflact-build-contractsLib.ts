@@ -16,7 +16,6 @@ export async function wflactBuildContractsLib(): Promise<void> {
     );
 
     const data = await response.json();
-    console.log('response.json: ' + JSON.stringify(data, null, 2));
     if (data.default_branch == process.env.GITHUB_REF_NAME) {
         const regionToPrdcr = JSON.parse(process.env.ODMD_region__contractsLibLatest!) as { [p: string]: string };
         for (const rgn in regionToPrdcr) {
