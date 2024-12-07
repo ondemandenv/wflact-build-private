@@ -40,13 +40,15 @@ export async function run(): Promise<void> {
         execSyncLog('env')
         throw new Error("Unknown ODMD_csResType")
     }
-    const producingStr = process.env.ODMD__productions
-    if (!producingStr || producingStr.split(',').length < 1) {
-        console.info('exit when no producingStr: ' + producingStr)
-    }
 
     if (process.env.ODMD_build_id == process.env.ODMD_contractsLibBuild) {
         return await wflactBuildContractsLib()
+    }
+
+    const producingStr = process.env.ODMD__productions
+    if (!producingStr || producingStr.split(',').length < 1) {
+        console.info('exit when no producingStr: ' + producingStr)
+        return
     }
 
     //D:\odmd\ONDEMAND_CENTRAL_REPO\src\lib\repo-build-pp-cmds-with-github-workflow.ts
