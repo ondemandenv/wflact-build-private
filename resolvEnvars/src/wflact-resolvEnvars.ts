@@ -3,6 +3,7 @@ import {execSync} from "child_process";
 import {AwsCredentialIdentity} from "@smithy/types";
 import {Credentials, GetCallerIdentityCommand, STSClient} from "@aws-sdk/client-sts";
 import {GetParameterCommand, SSMClient} from "@aws-sdk/client-ssm";
+import * as yaml from "yaml";
 
 
 export function execSyncLog(cmd: string) {
@@ -77,7 +78,7 @@ export async function run(): Promise<void> {
         const localBuildRoleId = await localSts.send(new GetCallerIdentityCommand({}));
 
         console.info(">>>>");
-        console.info(JSON.stringify(localBuildRoleId, null, 2));
+        console.info(yaml.stringify(localBuildRoleId, null, 2));
         console.info("<<<<");
 
         const awsAccount = localBuildRoleId.Account!
@@ -99,9 +100,9 @@ parameterName: `/odmd-${enver.owner.buildId}/${enver.targetRevision.type + '..' 
         const getConfig = await localSsm.send(
             new GetParameterCommand({Name}),
         )
-        console.info(`Param Rsp>>${JSON.stringify(getConfig)}`)
-        console.info(`Param val>>${JSON.stringify(getConfig.Parameter!.Value!)}`)
-        const enverConfigObj = JSON.parse(getConfig.Parameter!.Value!)
+        console.info(`Param Rsp yaml>>${yaml.stringify(getConfig)}`)
+        console.info(`Param val string>>${getConfig.Parameter!.Value!}`)
+        const enverConfigObj = yaml.parse(getConfig.Parameter!.Value!)
 
         /**
          *
