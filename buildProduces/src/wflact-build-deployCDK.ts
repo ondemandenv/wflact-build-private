@@ -1,7 +1,7 @@
 import fs from "fs";
 import * as process from "node:process";
 import {CloudFormationClient, DescribeStacksCommand} from "@aws-sdk/client-cloudformation";
-import {execSyncLog, genNpmRcCmds} from "./wflactBuildProducing";
+import {execSyncLog} from "./wflactBuildProducing";
 
 
 export async function wflactBuildDeployCDK(): Promise<void> {
@@ -23,10 +23,6 @@ export async function wflactBuildDeployCDK(): Promise<void> {
             pkgDeps[k] = pkgJsn.dependencies[k]
         }
     }
-
-    genNpmRcCmds(contractsLibBuildPkgOrg).forEach(c => {
-        execSyncLog(c)
-    })
 
     execSyncLog(`npm install -g aws-cdk@$ODMD_CDK_CLI_VERSION`);
     execSyncLog(`npm install -g cross-env`);

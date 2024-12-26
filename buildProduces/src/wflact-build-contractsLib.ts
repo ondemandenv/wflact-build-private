@@ -1,5 +1,5 @@
 import * as process from "node:process";
-import {execSyncLog, genNpmRcCmds} from "./wflactBuildProducing";
+import {execSyncLog} from "./wflactBuildProducing";
 import fs from "fs";
 
 export async function wflactBuildContractsLib(): Promise<void> {

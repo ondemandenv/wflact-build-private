@@ -152,6 +152,19 @@ parameterName: `/odmd-${enver.owner.buildId}/${enver.targetRevision.type + '..' 
         execSyncLog(`echo "AWS_REGION=${awsRegion}" >> $GITHUB_ENV`)
         execSyncLog(`echo "AWS_DEFAULT_REGION=${awsRegion}" >> $GITHUB_ENV`)
 
+        const contractsLibBuildPkgOrg = process.env.ODMD_contractsLibPkgName;
+        if (contractsLibBuildPkgOrg) {
+
+            [
+                `echo "@ondemandenv:registry=https://npm.pkg.github.com/" >> .npmrc`,
+                `echo "${contractsLibBuildPkgOrg}:registry=https://npm.pkg.github.com/" >> .npmrc`,
+                'echo "//npm.pkg.github.com/:_authToken=$github_token" >> .npmrc'
+            ].forEach(c => {
+                execSyncLog(c)
+            })
+
+        }
+
     } catch (e) {
         console.error(e as Error)
     }

@@ -5,17 +5,6 @@ import {execSync} from "child_process";
 import {wflactBuildContractsLib} from "./wflact-build-contractsLib";
 import fs from "fs";
 
-export function genNpmRcCmds(contractsLibBuildPkgOrg: string): string[] {
-    return [
-
-        `echo "@ondemandenv:registry=https://npm.pkg.github.com/" >> .npmrc`,
-        `echo "${contractsLibBuildPkgOrg}:registry=https://npm.pkg.github.com/" >> .npmrc`,
-        'echo "//npm.pkg.github.com/:_authToken=$github_token" >> .npmrc'
-
-    ]
-}
-
-
 export function execSyncLog(cmd: string) {
     execSync(cmd, {cwd: process.env.ODMD_work_dir, stdio: "inherit"});
 }
