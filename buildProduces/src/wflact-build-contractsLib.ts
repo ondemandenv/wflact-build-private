@@ -53,6 +53,11 @@ aws s3  --region ${rgn}  cp $TGZ_FILE "s3://\${bucket_name}/odmd_contractsLib.tg
 
 aws ssm put-parameter --region ${rgn} --name ${shPath} --type String --value "${producingVal.trim()}" --overwrite
 
+aws s3api put-object-tagging --region ${rgn} --bucket \${bucket_name} --key odmd_contractsLib.tgz \\
+--tagging '{"TagSet": [
+    { "Key": "contracts_lib_ver", "Value": "${producingVal}" }
+]}'
+
 `)
             /*
              D:\odmd\ONDEMAND_CENTRAL_REPO\src\lib\ondemand_region-repobuild.ts

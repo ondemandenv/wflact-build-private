@@ -7,6 +7,7 @@ import * as yaml from "yaml";
 
 
 export function execSyncLog(cmd: string) {
+    console.info(`execSyncLog: ${cmd}`)
     execSync(cmd, {cwd: process.env.ODMD_work_dir, stdio: "inherit"});
 }
 
@@ -17,6 +18,7 @@ export function execSyncLog(cmd: string) {
 export async function run(): Promise<void> {
 
     const input_creds_str = process.env["INPUT_AWS_CREDENTIALS"]!;// input_ always all upper case
+    let envarStack = process.env["input_ghWflPpStackName".toUpperCase()]!;// input_ always all upper case
 
     let awsCreds: AwsCredentialIdentity | undefined = undefined;
 
@@ -91,28 +93,34 @@ parameterName: `/odmd-${enver.owner.buildId}/${enver.targetRevision.type + '..' 
         */
         const targetRevTypeVal = (ghRefArr[1] == 'heads' ? 'b..' : 't..') + ghRefArr[2];
 
-
         const localSsm = new SSMClient();
 
         //todo: this is workplace account !
         const Name = `/odmd-${buildId}/${targetRevTypeVal}/enver_config`;
-        console.info(`enver config: Param Name>>${Name}`)
-        const getConfig = await localSsm.send(
-            new GetParameterCommand({Name}),
-        )
-        console.info(`Param Rsp yaml>>${yaml.stringify(getConfig)}`)
-        console.info(`Param val string>>${getConfig.Parameter!.Value!}`)
-        const enverConfigObj = yaml.parse(getConfig.Parameter!.Value!)
 
-        /**
-         *
-         *             ghWflPpStackName: (this.getCsResType() != 'Custom::CdkGithubWF'// will directly thru contracts lib
-         *                 && this.getCsResType() != 'Custom::ContainerImageEcr'// no dependencies except src sha
-         *                 && this.enver.owner != this.enver.owner.contracts.contractsLibBuild // no dependencies except src sha
-         *             ) ? this.stackName : undefined //used in D:\odmd\wflact-build-private\resolvEnvars\src\wflact-resolvEnvars.ts
-         *
-         */
-        const envarStack = enverConfigObj['ghWflPpStackName'] as string
+        if (!envarStack || envarStack.length < 3) {
+            console.info(`get envarStack : Param Name>>${Name}`)
+            const getConfig = await localSsm.send(
+                new GetParameterCommand({Name}),
+            )
+            console.info(`get envarStack Rsp yaml>>${yaml.stringify(getConfig)}`)
+            console.info(`get envarStack val string>>${getConfig.Parameter!.Value!}`)
+            const enverConfigObj = yaml.parse(getConfig.Parameter!.Value!)
+
+            /**
+             *
+             *             ghWflPpStackName: (this.getCsResType() != 'Custom::CdkGithubWF'// will directly thru contracts lib
+             *                 && this.getCsResType() != 'Custom::ContainerImageEcr'// no dependencies except src sha
+             *                 && this.enver.owner != this.enver.owner.contracts.contractsLibBuild // no dependencies except src sha
+             *             ) ? this.stackName : undefined //used in D:\odmd\wflact-build-private\resolvEnvars\src\wflact-resolvEnvars.ts
+             * this has to be before aws cloudformation update-stack, so this is out of date
+             * switch to ghWflPpStackName
+             */
+            envarStack = enverConfigObj['ghWflPpStackName'] as string
+            console.info(`got envarStack: ${getConfig.Parameter!.Value!}`)
+        }
+
+
         if (envarStack && envarStack.includes(buildId)) {// will be string 'undefined' in github action ! fk github
 
             /*
@@ -135,7 +143,17 @@ parameterName: `/odmd-${enver.owner.buildId}/${enver.targetRevision.type + '..' 
                 console.error(e)
             }
             execSyncLog(`aws cloudformation wait stack-update-complete --stack-name ${envarStack}`)
+        } else {
+            console.error('No ghWflPpStackName found !!!')
         }
+
+        console.info(`get enverConfigObj : Param Name>>${Name}`)
+        const getConfig = await localSsm.send(
+            new GetParameterCommand({Name}),
+        )
+        console.info(`get enverConfigObj Rsp yaml>>${yaml.stringify(getConfig)}`)
+        console.info(`get enverConfigObj val string>>${getConfig.Parameter!.Value!}`)
+        const enverConfigObj = yaml.parse(getConfig.Parameter!.Value!)
 
         for (const key in enverConfigObj) {
             const lk = key.toLowerCase();
