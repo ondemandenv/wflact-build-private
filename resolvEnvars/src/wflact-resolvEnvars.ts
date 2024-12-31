@@ -152,8 +152,11 @@ parameterName: `/odmd-${enver.owner.buildId}/${enver.targetRevision.type + '..' 
         execSyncLog(`echo "AWS_REGION=${awsRegion}" >> $GITHUB_ENV`)
         execSyncLog(`echo "AWS_DEFAULT_REGION=${awsRegion}" >> $GITHUB_ENV`)
 
-        const contractsLibBuildPkgOrg = process.env.ODMD_contractsLibPkgName;
-        if (contractsLibBuildPkgOrg) {
+
+        const contractsLibPkgName = enverConfigObj ['ODMD_contractsLibPkgName'] as string
+        if (contractsLibPkgName && contractsLibPkgName.includes('/')) {
+            console.info('>>contractsLibPkgName:' + contractsLibPkgName)
+            const contractsLibBuildPkgOrg = contractsLibPkgName.split('/')[0] as string
 
             [
                 `echo "@ondemandenv:registry=https://npm.pkg.github.com/" >> .npmrc`,
@@ -163,6 +166,8 @@ parameterName: `/odmd-${enver.owner.buildId}/${enver.targetRevision.type + '..' 
                 execSyncLog(c)
             })
 
+            console.info("<<contractsLibBuildPkgOrg<<" + contractsLibBuildPkgOrg);
+            execSyncLog('ls -ltarh')
         }
 
     } catch (e) {
