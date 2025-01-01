@@ -39,7 +39,7 @@ export async function wflactBuildContractsLib(): Promise<void> {
             const [org, pkg] = pkgJsnName.split('/');
 
             // Assume role
-            const stsClient = new STSClient({ region });
+            const stsClient = new STSClient({region});
             const assumeRoleResponse = await stsClient.send(new AssumeRoleCommand({
                 RoleArn: centrRole,
                 RoleSessionName: 'contracts_pkg'
@@ -52,8 +52,8 @@ export async function wflactBuildContractsLib(): Promise<void> {
             };
 
             // Create service clients with assumed role credentials
-            const s3Client = new S3Client({ region, credentials });
-            const ssmClient = new SSMClient({ region, credentials });
+            const s3Client = new S3Client({region, credentials});
+            const ssmClient = new SSMClient({region, credentials});
 
             // Get bucket name from SSM
             const bucketParam = await ssmClient.send(new GetParameterCommand({
@@ -69,7 +69,7 @@ export async function wflactBuildContractsLib(): Promise<void> {
                 Bucket: bucketName,
                 Key: 'odmd_contractsLib.tgz',
                 Body: fileContent,
-                Tagging: `contracts_lib_ver=${producingVal}`
+                Tagging: encodeURIComponent(`contracts_lib_ver=${producingVal}`)
             }));
 
             // Update SSM parameter
