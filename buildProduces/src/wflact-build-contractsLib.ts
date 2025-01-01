@@ -69,7 +69,7 @@ export async function wflactBuildContractsLib(): Promise<void> {
                 Bucket: bucketName,
                 Key: 'odmd_contractsLib.tgz',
                 Body: fileContent,
-                Tagging: `contracts_lib_ver=${producingVal.replace(/[^a-zA-Z0-9\s_.:/=+\-@]/g, '_')}`
+                Tagging: encodeURIComponent(`contracts_lib_ver=${producingVal.replace(/[^a-zA-Z0-9\s_.:/=+\-@]/g, '_')}`)
             }));
 
             // Update SSM parameter
