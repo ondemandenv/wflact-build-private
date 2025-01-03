@@ -28,6 +28,11 @@ export async function wflactBuildContractsLib(): Promise<void> {
     );
 
     const data = await response.json();
+
+    function awsTagStr(producingVal: string) {
+        return producingVal.trim().replace(/[^a-zA-Z0-9\s_.:/=+\-@]/g, '_');
+    }
+
     if (data.default_branch === process.env.GITHUB_REF_NAME) {
         const regionToPrdcr = JSON.parse(process.env.ODMD_region__contractsLibLatest!) as { [p: string]: string };
         execSyncLog('npm pack');
@@ -69,7 +74,7 @@ export async function wflactBuildContractsLib(): Promise<void> {
                 Bucket: bucketName,
                 Key: 'odmd_contractsLib.tgz',
                 Body: fileContent,
-                Tagging: encodeURIComponent(`contracts_lib_ver=${producingVal.replace(/[^a-zA-Z0-9\s_.:/=+\-@]/g, '_')}`)
+                Tagging: `contracts_lib_ver=${awsTagStr(producingVal)}`
             }));
 
             // Update SSM parameter
