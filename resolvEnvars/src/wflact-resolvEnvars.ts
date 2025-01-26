@@ -177,9 +177,9 @@ parameterName: `/odmd-${enver.owner.buildId}/${enver.targetRevision.type + '..' 
             const contractsLibBuildPkgOrg = contractsLibPkgName.split('/')[0] as string
 
             [
-                `echo "@ondemandenv:registry=https://npm.pkg.github.com/" >> .npmrc`,
-                `echo "${contractsLibBuildPkgOrg}:registry=https://npm.pkg.github.com/" >> .npmrc`,
-                'echo "//npm.pkg.github.com/:_authToken=$github_token" >> .npmrc'
+                `echo "@ondemandenv:registry=https://npm.pkg.github.com/" >> $ODMD_work_dir/.npmrc`,
+                `echo "${contractsLibBuildPkgOrg}:registry=https://npm.pkg.github.com/" >> $ODMD_work_dir/.npmrc`,
+                'echo "//npm.pkg.github.com/:_authToken=$github_token" >> $ODMD_work_dir/.npmrc'
             ].forEach(c => {
                 execSyncLog(c)
             })
